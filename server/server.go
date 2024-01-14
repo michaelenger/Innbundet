@@ -8,8 +8,8 @@ import (
 )
 
 // Health check endpoint handler
-func ping(c echo.Context) error {
-	return c.String(http.StatusOK, "pong")
+func index(c echo.Context) error {
+	return c.Render(http.StatusOK, "views/index.html", nil)
 }
 
 // Run the server
@@ -20,9 +20,14 @@ func RunServer() {
 	// Middleware
 	e.Use(middleware.Logger())
 	e.Use(middleware.Recover())
+	err := setupTemplateRenderer(e)
+	if err != nil {
+		e.Logger.Fatal(err)
+		return
+	}
 
 	// Routes
-	e.GET("/ping", ping)
+	e.GET("/", index)
 
 	// Begin
 	e.Logger.Fatal(e.Start(":8080"))
