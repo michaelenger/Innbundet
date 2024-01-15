@@ -12,8 +12,8 @@ func index(c echo.Context) error {
 	return c.Render(http.StatusOK, "views/index.html", nil)
 }
 
-// Run the server
-func RunServer() {
+// Initialise the server
+func Init() (*echo.Echo, error) {
 	// Echo instance
 	e := echo.New()
 
@@ -22,13 +22,11 @@ func RunServer() {
 	e.Use(middleware.Recover())
 	err := setupTemplateRenderer(e)
 	if err != nil {
-		e.Logger.Fatal(err)
-		return
+		return nil, err
 	}
 
 	// Routes
 	e.GET("/", index)
 
-	// Begin
-	e.Logger.Fatal(e.Start(":8080"))
+	return e, nil
 }
