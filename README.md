@@ -26,6 +26,13 @@ Add the `--include-example-data` flag to include some RSS feeds:
 innbundet migrate --include-example-data
 ```
 
+Then you'll want to run the `sync` command to fetch any new feed items. This
+should be done periodically:
+
+```shell
+innbundet sync
+```
+
 Run the web app using the `server` command:
 
 ```shell
