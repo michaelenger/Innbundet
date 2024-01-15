@@ -1,9 +1,10 @@
 package db
 
 import (
+	"log"
+
 	"gorm.io/driver/sqlite"
 	"gorm.io/gorm"
-	"log"
 )
 
 var db *gorm.DB
