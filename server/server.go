@@ -5,11 +5,24 @@ import (
 
 	"github.com/labstack/echo/v4"
 	"github.com/labstack/echo/v4/middleware"
+	"github.com/michaelenger/innbundet/db"
+	"github.com/michaelenger/innbundet/models"
 )
 
-// Health check endpoint handler
+// Index page - show a list of recent feed items
 func index(c echo.Context) error {
-	return c.Render(http.StatusOK, "views/index.html", nil)
+	db := db.DbManager()
+	feedItems := []models.FeedItem{}
+
+	result := db.Find(&feedItems)
+
+	if result.Error != nil {
+		return result.Error
+	}
+
+	return c.Render(http.StatusOK, "views/index.html", map[string]interface{}{
+		"feedItems": feedItems,
+	})
 }
 
 // Initialise the server

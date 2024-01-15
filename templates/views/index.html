@@ -1,5 +1,18 @@
 {{template "layout.html" .}}
 
 {{define "content"}}
-<h1>Hello, world!</h1>
+
+<h1>Feed Items</h1>
+
+<ul>
+	{{range .feedItems}}
+
+	<li>
+		<a href="{{.Link}}">{{.Title}}</a>
+	</li>
+
+	{{end}}
+</ul>
+
+
 {{end}}
