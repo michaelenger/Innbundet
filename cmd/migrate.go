@@ -1,7 +1,6 @@
 package cmd
 
 import (
-	"database/sql"
 	"log"
 
 	"github.com/michaelenger/innbundet/db"
@@ -28,26 +27,28 @@ func runMigrateCommand(cmd *cobra.Command, args []string) {
 
 	if includeExampleData {
 		logger.Print("Adding example data")
+		image := "https://michaelenger.com/assets/happybass.png"
 		manager.Create(&models.Feed{
 			Url:         "https://michaelenger.com/feed.rss",
 			Title:       "Michael Enger",
-			Link:        sql.NullString{"https://michaelenger.com", true},
-			Description: sql.NullString{"I am a professional. This is my website.", true},
-			Image:       sql.NullString{"https://michaelenger.com/assets/happybass.png", true},
+			Link:        "https://michaelenger.com",
+			Description: "I am a professional. This is my website.",
+			Image:       &image,
 		})
+		image = "https://i0.wp.com/pluralistic.net/wp-content/uploads/2020/02/cropped-guillotine-French-Revolution.jpg?fit=32%2C32&#038;ssl=1"
 		manager.Create(&models.Feed{
 			Url:         "https://pluralistic.net/feed/",
 			Title:       "Pluralistic: Daily links from Cory Doctorow",
-			Link:        sql.NullString{"https://pluralistic.net/", true},
-			Description: sql.NullString{"No trackers, no ads. Black type, white background. Privacy policy: we don't collect or retain any data at all ever period.", true},
-			Image:       sql.NullString{"https://i0.wp.com/pluralistic.net/wp-content/uploads/2020/02/cropped-guillotine-French-Revolution.jpg?fit=32%2C32&#038;ssl=1", true},
+			Link:        "https://pluralistic.net/",
+			Description: "No trackers, no ads. Black type, white background. Privacy policy: we don't collect or retain any data at all ever period.",
+			Image:       &image,
 		})
 		manager.Create(&models.Feed{
 			Url:         "https://boilingsteam.com/feed/rss-feed.xml",
 			Title:       "Boiling Steam",
-			Link:        sql.NullString{"https://boilingsteam.com", true},
-			Description: sql.NullString{"PC Gaming on Linux is so Tomorrow!", true},
-			Image:       sql.NullString{"", false},
+			Link:        "https://boilingsteam.com",
+			Description: "PC Gaming on Linux is so Tomorrow!",
+			Image:       nil,
 		})
 	}
 }

@@ -1,7 +1,6 @@
 package models
 
 import (
-	"database/sql"
 	"time"
 )
 
@@ -10,8 +9,8 @@ type FeedItem struct {
 	ID          uint `gorm:"primaryKey"`
 	Title       string
 	Link        string
-	Description sql.NullString
-	Author      sql.NullString
+	Description *string
+	Author      *string
 	Published   time.Time
 	FeedID      uint
 	Feed        Feed
