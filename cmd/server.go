@@ -16,7 +16,7 @@ func runServerCommand(cmd *cobra.Command, args []string) {
 	logger := log.Default()
 
 	// Database
-	err := db.Init()
+	_, err := db.Init()
 	if err != nil {
 		logger.Fatal(err)
 	}

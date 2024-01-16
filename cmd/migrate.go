@@ -17,12 +17,10 @@ func runMigrateCommand(cmd *cobra.Command, args []string) {
 	logger := log.Default()
 
 	// Database
-	err := db.Init()
+	manager, err := db.Init()
 	if err != nil {
 		logger.Fatal(err)
 	}
-
-	manager := db.DbManager()
 
 	logger.Print("Migrating database models")
 	manager.AutoMigrate(&models.Feed{})
