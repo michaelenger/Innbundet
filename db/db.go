@@ -7,8 +7,6 @@ import (
 	"gorm.io/gorm"
 )
 
-var db *gorm.DB
-
 // Initialise the database
 func Init() (*gorm.DB, error) {
 	var err error
@@ -17,15 +15,10 @@ func Init() (*gorm.DB, error) {
 	dbFile := "innbundet.sqlite"
 
 	logger.Printf("Initialising database: %s", dbFile)
-	db, err = gorm.Open(sqlite.Open(dbFile), &gorm.Config{})
+	db, err := gorm.Open(sqlite.Open(dbFile), &gorm.Config{})
 	if err != nil {
 		return nil, err
 	}
 
 	return db, nil
-}
-
-// Get the database manager
-func DbManager() *gorm.DB {
-	return db
 }

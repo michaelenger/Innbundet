@@ -16,13 +16,13 @@ func runServerCommand(cmd *cobra.Command, args []string) {
 	logger := log.Default()
 
 	// Database
-	_, err := db.Init()
+	dbManager, err := db.Init()
 	if err != nil {
 		logger.Fatal(err)
 	}
 
 	// Server
-	serv, err := server.Init()
+	serv, err := server.Init(dbManager)
 	if err != nil {
 		logger.Fatal(err)
 	}
