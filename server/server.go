@@ -36,6 +36,7 @@ func index(c echo.Context) error {
 func Init(db *gorm.DB) (*echo.Echo, error) {
 	// Echo instance
 	e := echo.New()
+	e.HideBanner = true
 
 	// Custom context
 	e.Use(func(next echo.HandlerFunc) echo.HandlerFunc {
