@@ -14,7 +14,7 @@ func index(c echo.Context) error {
 	db := db.DbManager()
 	feedItems := []models.FeedItem{}
 
-	result := db.Find(&feedItems)
+	result := db.Order("published desc").Find(&feedItems)
 
 	if result.Error != nil {
 		return result.Error
