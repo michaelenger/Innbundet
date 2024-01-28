@@ -1,7 +1,7 @@
 package config
 
 import (
-	"fmt"
+	"log"
 	"os"
 
 	"gopkg.in/yaml.v2"
@@ -17,6 +17,8 @@ type Config struct {
 
 // Read the config from a file path.
 func FromFile(filePath string) (*Config, error) {
+	logger := log.Default()
+
 	conf := Config{
 		"Innbundet",
 		"Tiny RSS reader.",
@@ -25,9 +27,11 @@ func FromFile(filePath string) (*Config, error) {
 	}
 
 	if _, err := os.Stat(filePath); os.IsNotExist(err) {
-		return nil, fmt.Errorf("No config file found at specified path: %v", filePath)
+		logger.Printf("Unable to read config file at: %s; using default values", filePath)
+		return &conf, nil
 	}
 
+	logger.Printf("Reading config from: %s", filePath)
 	contents, err := os.ReadFile(filePath)
 	if err != nil {
 		return nil, err
