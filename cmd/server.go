@@ -17,7 +17,7 @@ func runServerCommand(cmd *cobra.Command, args []string) {
 	logger := log.Default()
 
 	// Read config file
-	conf, err := config.FromFile("config.yaml")
+	conf, err := config.FromFile(configFile)
 	if err != nil {
 		logger.Fatal(err)
 	}
@@ -47,6 +47,7 @@ var serverCommand = &cobra.Command{
 
 // Initialise the server command
 func init() {
+	serverCommand.Flags().StringVarP(&configFile, "config", "c", "config.yaml", "Config file to read")
 	serverCommand.Flags().Int32VarP(&port, "port", "p", 8080, "Port to serve the app on")
 
 	rootCmd.AddCommand(serverCommand)

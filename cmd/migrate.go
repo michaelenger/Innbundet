@@ -17,7 +17,7 @@ func runMigrateCommand(cmd *cobra.Command, args []string) {
 	logger := log.Default()
 
 	// Read config file
-	conf, err := config.FromFile("config.yaml")
+	conf, err := config.FromFile(configFile)
 	if err != nil {
 		logger.Fatal(err)
 	}
@@ -70,6 +70,7 @@ var migrateCommand = &cobra.Command{
 
 // Initialise the migrate command
 func init() {
+	migrateCommand.Flags().StringVarP(&configFile, "config", "c", "config.yaml", "Config file to read")
 	migrateCommand.Flags().BoolVarP(&includeExampleData, "include-example-data", "d", false, "Include example data")
 
 	rootCmd.AddCommand(migrateCommand)
