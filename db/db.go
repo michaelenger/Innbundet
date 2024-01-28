@@ -8,14 +8,11 @@ import (
 )
 
 // Initialise the database
-func Init() (*gorm.DB, error) {
-	var err error
-
+func Init(filePath string) (*gorm.DB, error) {
 	logger := log.Default()
-	dbFile := "innbundet.sqlite"
 
-	logger.Printf("Initialising database: %s", dbFile)
-	db, err := gorm.Open(sqlite.Open(dbFile), &gorm.Config{})
+	logger.Printf("Initialising database: %s", filePath)
+	db, err := gorm.Open(sqlite.Open(filePath), &gorm.Config{})
 	if err != nil {
 		return nil, err
 	}

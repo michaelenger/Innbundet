@@ -3,6 +3,7 @@ package cmd
 import (
 	"log"
 
+	"github.com/michaelenger/innbundet/config"
 	"github.com/michaelenger/innbundet/db"
 	"github.com/michaelenger/innbundet/server"
 	"github.com/spf13/cobra"
@@ -15,14 +16,20 @@ var port int32
 func runServerCommand(cmd *cobra.Command, args []string) {
 	logger := log.Default()
 
+	// Read config file
+	conf, err := config.FromFile("config.yaml")
+	if err != nil {
+		logger.Fatal(err)
+	}
+
 	// Database
-	dbManager, err := db.Init()
+	db, err := db.Init(conf.DatabaseFile)
 	if err != nil {
 		logger.Fatal(err)
 	}
 
 	// Server
-	serv, err := server.Init(dbManager)
+	serv, err := server.Init(db, conf)
 	if err != nil {
 		logger.Fatal(err)
 	}

@@ -5,6 +5,7 @@ import (
 
 	"github.com/labstack/echo/v4"
 	"github.com/labstack/echo/v4/middleware"
+	"github.com/michaelenger/innbundet/config"
 	"github.com/michaelenger/innbundet/models"
 	"gorm.io/gorm"
 )
@@ -12,7 +13,8 @@ import (
 // Custom server context
 type ServerContext struct {
 	echo.Context
-	db *gorm.DB
+	db   *gorm.DB
+	conf *config.Config
 }
 
 // Index page - show a list of recent feed items
@@ -33,7 +35,7 @@ func index(c echo.Context) error {
 }
 
 // Initialise the server
-func Init(db *gorm.DB) (*echo.Echo, error) {
+func Init(db *gorm.DB, conf *config.Config) (*echo.Echo, error) {
 	// Echo instance
 	e := echo.New()
 	e.HideBanner = true
@@ -41,7 +43,7 @@ func Init(db *gorm.DB) (*echo.Echo, error) {
 	// Custom context
 	e.Use(func(next echo.HandlerFunc) echo.HandlerFunc {
 		return func(c echo.Context) error {
-			cc := &ServerContext{c, db}
+			cc := &ServerContext{c, db, conf}
 			return next(cc)
 		}
 	})

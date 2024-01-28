@@ -3,6 +3,7 @@ package cmd
 import (
 	"log"
 
+	"github.com/michaelenger/innbundet/config"
 	"github.com/michaelenger/innbundet/db"
 	"github.com/michaelenger/innbundet/models"
 	"github.com/spf13/cobra"
@@ -15,20 +16,26 @@ var includeExampleData bool
 func runMigrateCommand(cmd *cobra.Command, args []string) {
 	logger := log.Default()
 
+	// Read config file
+	conf, err := config.FromFile("config.yaml")
+	if err != nil {
+		logger.Fatal(err)
+	}
+
 	// Database
-	manager, err := db.Init()
+	db, err := db.Init(conf.DatabaseFile)
 	if err != nil {
 		logger.Fatal(err)
 	}
 
 	logger.Print("Migrating database models")
-	manager.AutoMigrate(&models.Feed{})
-	manager.AutoMigrate(&models.FeedItem{})
+	db.AutoMigrate(&models.Feed{})
+	db.AutoMigrate(&models.FeedItem{})
 
 	if includeExampleData {
 		logger.Print("Adding example data")
 		image := "https://michaelenger.com/assets/happybass.png"
-		manager.Create(&models.Feed{
+		db.Create(&models.Feed{
 			Url:         "https://michaelenger.com/feed.rss",
 			Title:       "Michael Enger",
 			Link:        "https://michaelenger.com",
@@ -36,14 +43,14 @@ func runMigrateCommand(cmd *cobra.Command, args []string) {
 			Image:       &image,
 		})
 		image = "https://i0.wp.com/pluralistic.net/wp-content/uploads/2020/02/cropped-guillotine-French-Revolution.jpg?fit=32%2C32&#038;ssl=1"
-		manager.Create(&models.Feed{
+		db.Create(&models.Feed{
 			Url:         "https://pluralistic.net/feed/",
 			Title:       "Pluralistic: Daily links from Cory Doctorow",
 			Link:        "https://pluralistic.net/",
 			Description: "No trackers, no ads. Black type, white background. Privacy policy: we don't collect or retain any data at all ever period.",
 			Image:       &image,
 		})
-		manager.Create(&models.Feed{
+		db.Create(&models.Feed{
 			Url:         "https://boilingsteam.com/feed/rss-feed.xml",
 			Title:       "Boiling Steam",
 			Link:        "https://boilingsteam.com",

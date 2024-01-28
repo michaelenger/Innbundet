@@ -3,6 +3,7 @@ package cmd
 import (
 	"log"
 
+	"github.com/michaelenger/innbundet/config"
 	"github.com/michaelenger/innbundet/db"
 	"github.com/michaelenger/innbundet/models"
 	"github.com/michaelenger/innbundet/sync"
@@ -13,13 +14,19 @@ import (
 func runSyncCommand(cmd *cobra.Command, args []string) {
 	logger := log.Default()
 
-	manager, err := db.Init()
+	// Read config file
+	conf, err := config.FromFile("config.yaml")
+	if err != nil {
+		logger.Fatal(err)
+	}
+
+	db, err := db.Init(conf.DatabaseFile)
 	if err != nil {
 		logger.Fatal(err)
 	}
 
 	feeds := []models.Feed{}
-	result := manager.Find(&feeds)
+	result := db.Find(&feeds)
 	if result.Error != nil {
 		logger.Fatal(result.Error)
 	}
@@ -27,7 +34,7 @@ func runSyncCommand(cmd *cobra.Command, args []string) {
 	logger.Printf("Found %d feeds", len(feeds))
 
 	for _, feed := range feeds {
-		err = sync.SyncFeed(manager, &feed)
+		err = sync.SyncFeed(db, &feed)
 		if err != nil {
 			logger.Printf("ERROR: %v", err)
 		}
