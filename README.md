@@ -40,3 +40,23 @@ innbundet server
 ```
 
 This will serve the application on http://localhost:8080
+
+All the commands will attempt to read the config from a config file, which is
+assumed to be `config.yaml` but can also be set using the `--config` parameter:
+
+```shell
+innbundet sync --config my_config.yaml
+```
+
+### Config File
+
+The configuration file is a YAML and can contain the following:
+
+```yaml
+database_file: innbundet.sqlite  # Path to the SQLite database file
+description: Tiny RSS reader.    # Description of the page
+items_per_page: 25               # Amount of items to show per page
+title: Innbundet                 # Title of the page
+```
+
+If no file is present it will use all the defaults.
