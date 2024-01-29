@@ -57,6 +57,12 @@ func (t *TemplateRenderer) Render(w io.Writer, name string, data interface{}, c 
 func setupTemplateRenderer(e *echo.Echo) error {
 	// Setup template functions
 	funcMap := template.FuncMap{
+		"dec": func(i int) int {
+			return i - 1
+		},
+		"inc": func(i int) int {
+			return i + 1
+		},
 		"title": strings.Title,
 	}
 

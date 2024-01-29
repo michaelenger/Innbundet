@@ -5,14 +5,21 @@
 <h1>Feed Items</h1>
 
 <ul>
-	{{range .feedItems}}
+	{{range .FeedItems}}
 
 	<li>
-		<a href="{{.Link}}">{{.Title}}</a>
+		{{.ID}} <a href="{{.Link}}">{{.Title}}</a>
 	</li>
 
 	{{end}}
 </ul>
 
+{{if gt .Page 1}}
+<a href="?page={{dec .Page}}">Previous Page</a>
+{{end}}
+
+{{if lt .Page .TotalPages}}
+<a href="?page={{inc .Page}}">Next Page</a>
+{{end}}
 
 {{end}}
