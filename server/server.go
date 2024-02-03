@@ -40,6 +40,7 @@ func index(c echo.Context) error {
 	totalPages := int(math.Ceil(float64(total) / float64(ctx.config.ItemsPerPage)))
 
 	return ctx.Render(http.StatusOK, "views/index.html", map[string]interface{}{
+		"Config":     ctx.config,
 		"FeedItems":  feedItems,
 		"Page":       page,
 		"TotalPages": totalPages,

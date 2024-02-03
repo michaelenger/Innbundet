@@ -36,10 +36,18 @@ func SyncFeed(db *gorm.DB, feed *models.Feed) error {
 		if len(item.Authors) != 0 {
 			feedAuthor = item.Authors[0].Name
 		}
+
 		image = nil
 		if item.Image != nil {
 			image = &item.Image.URL
+		} else if media, ok := item.Extensions["media"]; ok {
+			if content, ok := media["content"]; ok && len(content) != 0 {
+				if url, ok := content[0].Attrs["url"]; ok {
+					image = &url
+				}
+			}
 		}
+
 		published := time.Now()
 		if item.PublishedParsed != nil {
 			published = *item.PublishedParsed
