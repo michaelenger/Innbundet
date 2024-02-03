@@ -23,10 +23,19 @@ func SyncFeed(db *gorm.DB, feed *models.Feed) error {
 		return error
 	}
 
+	var feedAuthor string
+	if len(data.Authors) != 0 {
+		feedAuthor = data.Authors[0].Name
+	}
+
 	// Get/update feed items
 	addCount := 0
 	updateCount := 0
 	for _, item := range data.Items {
+		author := feedAuthor
+		if len(item.Authors) != 0 {
+			feedAuthor = item.Authors[0].Name
+		}
 		image = nil
 		if item.Image != nil {
 			image = &item.Image.URL
@@ -43,6 +52,7 @@ func SyncFeed(db *gorm.DB, feed *models.Feed) error {
 				Title:       item.Title,
 				Link:        item.Link,
 				Description: item.Description,
+				Author:      author,
 				Image:       image,
 				Published:   published,
 				Feed:        *feed,
@@ -54,6 +64,7 @@ func SyncFeed(db *gorm.DB, feed *models.Feed) error {
 		db.Model(&feedItem).Updates(models.FeedItem{
 			Title:       item.Title,
 			Description: item.Description,
+			Author:      author,
 			Image:       image,
 			Published:   published,
 		})

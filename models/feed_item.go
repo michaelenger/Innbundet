@@ -10,6 +10,7 @@ type FeedItem struct {
 	Title       string
 	Link        string
 	Description string
+	Author      string
 	Image       *string
 	Published   time.Time
 	FeedID      uint
