@@ -61,6 +61,9 @@ func Init(db *gorm.DB, conf *config.Config) (*echo.Echo, error) {
 		}
 	})
 
+	// Static files
+	e.Static("/assets", "static")
+
 	// Middleware
 	e.Use(middleware.Logger())
 	e.Use(middleware.Recover())
