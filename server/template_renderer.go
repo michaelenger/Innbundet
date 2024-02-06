@@ -4,6 +4,7 @@ import (
 	"html/template"
 	"io"
 	"io/ioutil"
+	"net/url"
 	"os"
 	"path/filepath"
 	"strings"
@@ -80,6 +81,21 @@ func truncateString(str string, max int) string {
 	return str
 }
 
+// Extracts out the base host name of a URL.
+func urlHost(str string) string {
+	u, err := url.Parse(str)
+	if err != nil || u.Host == "" {
+		return str
+	}
+
+	base := strings.ToLower(u.Host)
+	if strings.HasPrefix(base, "www.") {
+		return base[4:]
+	}
+
+	return base
+}
+
 // Setup the template renderer, adding it to the Echo server
 func setupTemplateRenderer(e *echo.Echo) error {
 	// Setup template functions
@@ -91,6 +107,7 @@ func setupTemplateRenderer(e *echo.Echo) error {
 			return i + 1
 		},
 		"truncate": truncateString,
+		"urlhost": urlHost,
 	}
 
 	// Find and parse template files
