@@ -51,7 +51,5 @@ var syncCommand = &cobra.Command{
 
 // Initialise the sync command
 func init() {
-	syncCommand.Flags().StringVarP(&configFile, "config", "c", "config.yaml", "Config file to read")
-
 	rootCmd.AddCommand(syncCommand)
 }

@@ -47,7 +47,6 @@ var serverCommand = &cobra.Command{
 
 // Initialise the server command
 func init() {
-	serverCommand.Flags().StringVarP(&configFile, "config", "c", "config.yaml", "Config file to read")
 	serverCommand.Flags().Int32VarP(&port, "port", "p", 8080, "Port to serve the app on")
 
 	rootCmd.AddCommand(serverCommand)

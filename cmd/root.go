@@ -12,5 +12,7 @@ var rootCmd = &cobra.Command{
 }
 
 func Execute() error {
+	rootCmd.PersistentFlags().StringVarP(&configFile, "config", "c", "config.yaml", "Config file to read")
+
 	return rootCmd.Execute()
 }

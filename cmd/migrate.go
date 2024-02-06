@@ -70,7 +70,6 @@ var migrateCommand = &cobra.Command{
 
 // Initialise the migrate command
 func init() {
-	migrateCommand.Flags().StringVarP(&configFile, "config", "c", "config.yaml", "Config file to read")
 	migrateCommand.Flags().BoolVarP(&includeExampleData, "include-example-data", "d", false, "Include example data")
 
 	rootCmd.AddCommand(migrateCommand)
