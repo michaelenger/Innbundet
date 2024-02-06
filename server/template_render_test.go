@@ -44,13 +44,30 @@ func TestTruncateString(t *testing.T) {
 	}
 }
 
+func TestUrlBase(t *testing.T) {
+	tests := map[string]string{
+		"https://example.org":                    "https://example.org",
+		"example.org":                            "example.org",
+		"https://www.example.org":                "https://www.example.org",
+		"http://EXAMPLE.ORG/some/page?weird=yes": "http://example.org",
+		"ftp://localhost/some/page?weird=yes":    "ftp://localhost",
+	}
+
+	for input, expected := range tests {
+		result := urlBase(input)
+		if result != expected {
+			t.Fatalf("testing \"%v\" received \"%v\" expected \"%v\"", input, result, expected)
+		}
+	}
+}
+
 func TestUrlHost(t *testing.T) {
 	tests := map[string]string{
-		"https://example.org":                     "example.org",
-		"example.org":                             "example.org",
-		"https://www.example.org":                 "example.org",
-		"https://EXAMPLE.ORG/some/page?weird=yes": "example.org",
-		"https://localhost/some/page?weird=yes":   "localhost",
+		"https://example.org":                    "example.org",
+		"example.org":                            "example.org",
+		"https://www.example.org":                "example.org",
+		"http://EXAMPLE.ORG/some/page?weird=yes": "example.org",
+		"ftp://localhost/some/page?weird=yes":    "localhost",
 	}
 
 	for input, expected := range tests {

@@ -126,6 +126,19 @@ func truncateString(str string, max int) string {
 	return str
 }
 
+// Extracts out the base scheme and host name of a URL.
+func urlBase(str string) string {
+	u, err := url.Parse(str)
+	if err != nil || u.Host == "" {
+		return str
+	}
+
+	scheme := strings.ToLower(u.Scheme)
+	host := strings.ToLower(u.Host)
+
+	return fmt.Sprintf("%s://%s", scheme, host)
+}
+
 // Extracts out the base host name of a URL.
 func urlHost(str string) string {
 	u, err := url.Parse(str)
@@ -153,6 +166,7 @@ func setupTemplateRenderer(e *echo.Echo) error {
 		},
 		"timeago":  timeAgo,
 		"truncate": truncateString,
+		"urlbase":  urlBase,
 		"urlhost":  urlHost,
 	}
 
