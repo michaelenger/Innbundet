@@ -1,13 +1,16 @@
 package server
 
 import (
+	"fmt"
 	"html/template"
 	"io"
 	"io/ioutil"
+	"math"
 	"net/url"
 	"os"
 	"path/filepath"
 	"strings"
+	"time"
 	"unicode"
 
 	"github.com/labstack/echo/v4"
@@ -53,6 +56,48 @@ type TemplateRenderer struct {
 // Render a template document
 func (t *TemplateRenderer) Render(w io.Writer, name string, data interface{}, c echo.Context) error {
 	return t.templates.ExecuteTemplate(w, name, data)
+}
+
+func timeAgo(t time.Time) string {
+	now := time.Now()
+	if t.After(now) {
+		return t.Format("2006-01-02")
+	}
+
+	since := now.Sub(t)
+	hours := math.Floor(since.Hours())
+	if hours >= 24*7 {
+		return t.Format("2006-01-02")
+	}
+
+	if hours >= 24 {
+		days := math.Floor(hours / 24)
+		s := ""
+		if days > 1 {
+			s = "s"
+		}
+		return fmt.Sprintf("%.f day%s ago", days, s)
+	}
+
+	minutes := math.Floor(since.Minutes())
+	if minutes >= 60 {
+		s := ""
+		if hours > 1 {
+			s = "s"
+		}
+		return fmt.Sprintf("%.f hour%s ago", hours, s)
+	}
+
+	seconds := since.Seconds()
+	if seconds >= 60 {
+		s := ""
+		if minutes > 1 {
+			s = "s"
+		}
+		return fmt.Sprintf("%.f minute%s ago", minutes, s)
+	}
+
+	return "now"
 }
 
 // Truncate a string to a given length.
@@ -106,8 +151,9 @@ func setupTemplateRenderer(e *echo.Echo) error {
 		"inc": func(i int) int {
 			return i + 1
 		},
+		"timeago":  timeAgo,
 		"truncate": truncateString,
-		"urlhost": urlHost,
+		"urlhost":  urlHost,
 	}
 
 	// Find and parse template files
