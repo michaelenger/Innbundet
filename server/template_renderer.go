@@ -7,6 +7,7 @@ import (
 	"os"
 	"path/filepath"
 	"strings"
+	"unicode"
 
 	"github.com/labstack/echo/v4"
 )
@@ -53,6 +54,32 @@ func (t *TemplateRenderer) Render(w io.Writer, name string, data interface{}, c 
 	return t.templates.ExecuteTemplate(w, name, data)
 }
 
+// Truncate a string to a given length.
+// Thanks to: https://stackoverflow.com/a/59955803
+func truncateString(str string, max int) string {
+	if len(str) == max {
+		return str
+	}
+
+	lastSpaceIx := -1
+	len := 0
+	for i, r := range str {
+		if unicode.IsSpace(r) {
+			lastSpaceIx = i
+		}
+		len++
+		if len >= max {
+			if lastSpaceIx != -1 {
+				return str[:lastSpaceIx] + "..."
+			}
+			// If here, string is longer than max, but has no spaces
+		}
+	}
+	// If here, string is shorter than max
+
+	return str
+}
+
 // Setup the template renderer, adding it to the Echo server
 func setupTemplateRenderer(e *echo.Echo) error {
 	// Setup template functions
@@ -63,7 +90,7 @@ func setupTemplateRenderer(e *echo.Echo) error {
 		"inc": func(i int) int {
 			return i + 1
 		},
-		"title": strings.Title,
+		"truncate": truncateString,
 	}
 
 	// Find and parse template files
