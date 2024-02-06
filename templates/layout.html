@@ -5,11 +5,25 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>innbundet</title>
+    <meta name="description" content="{{.Config.Description}}">
+
+    <title>{{.Config.Title}}</title>
+
+    <link rel="stylesheet" type="text/css" href="/assets/styles.css">
 </head>
 
 <body>
-    {{block "content" .}}{{end}}
+    <header>
+        <h1>{{.Config.Title}}</h1>
+    </header>
+
+    <main>
+        {{block "content" .}}{{end}}
+    </main>
+
+    <footer>
+        Made just for fun. This project is <a href="https://github.com/michaelenger/innbundet">open source</a>.
+    </footer>
 </body>
 
 </html>

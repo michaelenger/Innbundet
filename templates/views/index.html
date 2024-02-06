@@ -2,24 +2,38 @@
 
 {{define "content"}}
 
-<h1>Feed Items</h1>
+<h2 class="screen-reader-only">Feed Items</h2>
 
-<ul>
+<ul class="feed-items">
 	{{range .FeedItems}}
 
 	<li>
-		{{.ID}} <a href="{{.Link}}">{{.Title}}</a>
+		<h3 class="feed-title"><a href="{{.Link}}">{{.Title}}</a></h3>
+		<small class="feed-meta">
+			<time datetime="{{.Published}}">{{timeago .Published}}</time>
+			{{if .Author}}
+				<span>{{.Author}}</span>
+			{{end}}
+			<a href="{{urlbase .Link}}">{{urlhost .Link}}</a>
+		</small>
+		<p class="feed-description">{{truncate .SimpleDescription 420}}</p>
 	</li>
 
 	{{end}}
 </ul>
 
-{{if gt .Page 1}}
-<a href="?page={{dec .Page}}">Previous Page</a>
-{{end}}
+<nav class="page-navigation">
+	<div>
+		{{if gt .Page 1}}
+			<a class="page-previous" href="?page={{dec .Page}}">Previous Page</a>
+		{{end}}
+	</div>
 
-{{if lt .Page .TotalPages}}
-<a href="?page={{inc .Page}}">Next Page</a>
-{{end}}
+	<div>
+		{{if lt .Page .TotalPages}}
+			<a class="page-next" href="?page={{inc .Page}}">Next Page</a>
+		{{end}}
+	</div>
+</nav>
 
 {{end}}
