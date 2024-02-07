@@ -50,7 +50,8 @@ loop:
 }
 
 // Create a new feed item or update if the item already exists
-func CreateOrUpdateFeedItem(db *gorm.DB, item *FeedItem) (*FeedItem, error) {
+func CreateOrUpdateFeedItem(db *gorm.DB, item *FeedItem) (*FeedItem, bool, error) {
+	var created bool
 	var existingItem *FeedItem
 	var result *gorm.DB
 
@@ -65,9 +66,11 @@ func CreateOrUpdateFeedItem(db *gorm.DB, item *FeedItem) (*FeedItem, error) {
 			Published:   item.Published,
 		})
 		item = existingItem
+		created = false
 	} else {
 		result = db.Create(item)
+		created = true
 	}
 
-	return item, result.Error
+	return item, created, result.Error
 }

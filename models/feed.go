@@ -19,7 +19,8 @@ type Feed struct {
 }
 
 // Create a new feed or update if the feed already exists
-func CreateOrUpdateFeed(db *gorm.DB, feed *Feed) (*Feed, error) {
+func CreateOrUpdateFeed(db *gorm.DB, feed *Feed) (*Feed, bool, error) {
+	var created bool
 	var existingFeed *Feed
 	var result *gorm.DB
 
@@ -32,9 +33,11 @@ func CreateOrUpdateFeed(db *gorm.DB, feed *Feed) (*Feed, error) {
 			Image:       feed.Image,
 		})
 		feed = existingFeed
+		created = false
 	} else {
 		result = db.Create(feed)
+		created = true
 	}
 
-	return feed, result.Error
+	return feed, created, result.Error
 }

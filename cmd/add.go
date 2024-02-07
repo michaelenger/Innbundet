@@ -68,22 +68,30 @@ func runAddCommand(cmd *cobra.Command, args []string) {
 	}
 
 	logger.Printf("Adding/updating feed from %s", feed.Url)
-	feed, err = models.CreateOrUpdateFeed(db, feed)
+	feed, created, err := models.CreateOrUpdateFeed(db, feed)
 	if err != nil {
 		logger.Fatal(err)
 	}
 
-	logger.Printf("Feed added (id=%d)", feed.ID)
+	if created {
+		logger.Printf("..created (id=%d)", feed.ID)
+	} else {
+		logger.Printf("..updated (id=%d)", feed.ID)
+	}
 
 	for _, item := range items {
 		logger.Printf("Adding/updating feed item: %s", item.Link)
 		item.Feed = *feed
-		item, err = models.CreateOrUpdateFeedItem(db, item)
+		item, created, err = models.CreateOrUpdateFeedItem(db, item)
 		if err != nil {
 			logger.Fatal(err)
 		}
 
-		logger.Printf("Feed item added (id=%d)", item.ID)
+		if created {
+			logger.Printf("..created (id=%d)", item.ID)
+		} else {
+			logger.Printf("..updated (id=%d)", item.ID)
+		}
 	}
 }
 
