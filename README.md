@@ -60,3 +60,12 @@ title: Innbundet                 # Title of the page
 ```
 
 If no file is present it will use all the defaults.
+
+### Adding Feeds
+
+You can add the feeds using the `add` subcommand. Just provide it with the URL
+of the feed:
+
+```shell
+innbundet add https://michaelenger.com/feed.rss
+```

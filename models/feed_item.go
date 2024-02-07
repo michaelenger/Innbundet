@@ -8,6 +8,7 @@ import (
 	"time"
 
 	"golang.org/x/net/html"
+	"gorm.io/gorm"
 )
 
 // An item in a feed
@@ -46,4 +47,27 @@ loop:
 	}
 
 	return strings.TrimSpace(description.String())
+}
+
+// Create a new feed item or update if the item already exists
+func CreateOrUpdateFeedItem(db *gorm.DB, item *FeedItem) (*FeedItem, error) {
+	var existingItem *FeedItem
+	var result *gorm.DB
+
+	db.Where("feed_id = ? AND link = ?", item.Feed.ID, item.Link).Limit(1).Find(&existingItem)
+	if existingItem.ID != 0 {
+		result = db.Model(existingItem).Updates(FeedItem{
+			Title:       item.Title,
+			Link:        item.Link,
+			Description: item.Description,
+			Author:      item.Author,
+			Image:       item.Image,
+			Published:   item.Published,
+		})
+		item = existingItem
+	} else {
+		result = db.Create(item)
+	}
+
+	return item, result.Error
 }
