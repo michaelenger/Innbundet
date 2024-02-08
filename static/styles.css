@@ -66,7 +66,7 @@ main {
 
 .feed-icon {
 	flex: 0 0 32px;
-	margin-right: var(--width-spacing);
+	margin: var(--width-spacing-small);
 }
 
 .feed-item {
