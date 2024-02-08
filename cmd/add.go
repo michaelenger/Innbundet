@@ -17,10 +17,22 @@ var verifyFeed bool
 // Run the add command
 func runAddCommand(cmd *cobra.Command, args []string) {
 	logger := log.Default()
-	feedUrl := args[0]
+	url := args[0]
+
+	// Get feed URLs
+	feedUrls, err := parser.FindFeedUrls(url)
+	if err != nil {
+		logger.Fatal(err)
+	}
+
+	if len(feedUrls) == 0 {
+		logger.Fatal(fmt.Sprintf("Unable to find a feed in %s", url))
+	}
+
+	url = feedUrls[0]
 
 	// Parse the feed
-	feed, items, err := parser.ParseFeed(feedUrl)
+	feed, items, err := parser.ParseFeed(url)
 	if err != nil {
 		logger.Fatal(err)
 	}

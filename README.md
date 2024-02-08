@@ -69,3 +69,10 @@ of the feed:
 ```shell
 innbundet add https://michaelenger.com/feed.rss
 ```
+
+You can also provide a web URL and it will look for a feed in the site's
+`<link>` tags:
+
+```shell
+innbundet add https://michaelenger.com/
+```
