@@ -137,16 +137,16 @@ func fetchIcon(siteUrl string) *string {
 }
 
 // Given a feed or web URL, find any available feeds.
-func FindFeedUrls(url string) ([]string, error) {
+func FindFeedUrls(siteUrl string) ([]string, error) {
 	parser := gofeed.NewParser()
 
-	_, error := parser.ParseURL(url)
+	_, error := parser.ParseURL(siteUrl)
 	if error == nil {
-		return []string{url}, nil // if we're able to parse it then it's a feed URL
+		return []string{siteUrl}, nil // if we're able to parse it then it's a feed URL
 	}
 
 	var urls []string
-	links, err := fetchLinkElements(url)
+	links, err := fetchLinkElements(siteUrl)
 	if err != nil {
 		return nil, err
 	}
@@ -164,7 +164,8 @@ func FindFeedUrls(url string) ([]string, error) {
 			continue
 		}
 
-		urls = append(urls, link.Href)
+		feedUrl := ensureAbsoluteUrl(siteUrl, link.Href)
+		urls = append(urls, feedUrl)
 	}
 
 	return urls, nil
