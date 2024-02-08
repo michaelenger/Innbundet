@@ -30,7 +30,7 @@ func index(c echo.Context) error {
 
 	feedItems := []models.FeedItem{}
 	offset := (page - 1) * ctx.config.ItemsPerPage
-	result := ctx.db.Limit(ctx.config.ItemsPerPage).Offset(offset).Order("published desc").Find(&feedItems)
+	result := ctx.db.Preload("Feed").Limit(ctx.config.ItemsPerPage).Offset(offset).Order("published desc").Find(&feedItems)
 	if result.Error != nil {
 		return result.Error
 	}
