@@ -91,6 +91,10 @@ loop:
 			}
 
 			attrs := extractLinkElement(tokenizer)
+			if attrs.Href == "" {
+				break // no point in caring about this
+			}
+
 			tags = append(tags, attrs)
 		}
 	}
@@ -103,6 +107,20 @@ func fetchIcon(siteUrl string) *string {
 	links, err := fetchLinkElements(siteUrl)
 	if err != nil {
 		return nil
+	}
+
+	// Haven't found any links, try the root URL
+	if len(links) == 0 {
+		u, err := url.Parse(siteUrl)
+		if err != nil {
+			return nil
+		}
+
+		siteUrl = fmt.Sprintf("%s://%s", u.Scheme, u.Hostname())
+		links, err = fetchLinkElements(siteUrl)
+		if err != nil {
+			return nil
+		}
 	}
 
 	icon := ""
