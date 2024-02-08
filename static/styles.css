@@ -8,6 +8,7 @@
 	--color-text: #1A1423;
 	--color-text-muted: #797482;
 	--width-spacing: 1em;
+	--width-spacing-small: 0.5em;
 }
 
 /* Elements */
@@ -49,6 +50,10 @@ header {
 	padding: var(--width-spacing);
 }
 
+img {
+	max-width: 100%;
+}
+
 main {
 	background: var(--color-background-content);
 }
@@ -64,14 +69,17 @@ main {
 	margin-right: var(--width-spacing);
 }
 
-.feed-icon img {
-	border-radius: 2px;
-	display: block;
-	width: 100%;
-}
-
 .feed-item {
 	display: flex;
+}
+
+.feed-item img {
+	border-radius: 2px;
+	display: block;
+}
+
+.feed-content .feed-image {
+	margin-top: var(--width-spacing-small);
 }
 
 .feed-items {
@@ -88,7 +96,7 @@ main {
 .feed-meta {
 	color: var(--color-text-muted);
 	display: block;
-	margin: 0.5em 0;
+	margin: var(--width-spacing-small) 0;
 }
 
 .feed-meta > *::after {

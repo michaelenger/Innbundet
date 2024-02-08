@@ -13,7 +13,7 @@
 				<img src="{{.Feed.Image}}" alt="Icon for the {{.Feed.Title}} feed">
 			{{end}}
 		</div>
-		<div class="feed-content">
+		<div>
 			<h3 class="feed-title"><a href="{{.Link}}">{{.Title}}</a></h3>
 			<small class="feed-meta">
 				<time datetime="{{.Published}}">{{timeago .Published}}</time>
@@ -22,7 +22,14 @@
 				{{end}}
 				<a href="{{urlbase .Link}}">{{urlhost .Link}}</a>
 			</small>
-			<p class="feed-description">{{truncate .SimpleDescription 420}}</p>
+			<div class="feed-content">
+				<p class="feed-description">{{truncate .SimpleDescription 420}}</p>
+				{{if .Image}}
+					<div class="feed-image">
+						<img src="{{.Image}}" alt="Image for the feed item">
+					</div>
+				{{end}}
+			</div>
 		</div>
 	</li>
 
