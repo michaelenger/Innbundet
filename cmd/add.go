@@ -1,8 +1,12 @@
 package cmd
 
 import (
+	"bufio"
 	"fmt"
 	"log"
+	"os"
+	"strconv"
+	"strings"
 
 	"github.com/michaelenger/innbundet/config"
 	"github.com/michaelenger/innbundet/db"
@@ -29,7 +33,28 @@ func runAddCommand(cmd *cobra.Command, args []string) {
 		logger.Fatal(fmt.Sprintf("Unable to find a feed in %s", url))
 	}
 
-	url = feedUrls[0]
+	index := 0
+	if len(feedUrls) > 1 {
+		fmt.Printf("Found %d feed URLs\n", len(feedUrls))
+		for i, feedUrl := range feedUrls {
+			fmt.Printf(" [%d] %s\n", i+1, feedUrl)
+		}
+
+		fmt.Print("Select feed: ")
+		reader := bufio.NewReader(os.Stdin)
+		input, err := reader.ReadString('\n')
+		if err != nil {
+			logger.Fatal(err)
+		}
+
+		input = strings.TrimSuffix(input, "\n")
+		index, err = strconv.Atoi(input)
+		if err != nil {
+			logger.Fatal(err)
+		}
+	}
+
+	url = feedUrls[index]
 
 	// Parse the feed
 	feed, items, err := parser.ParseFeed(url)
