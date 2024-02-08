@@ -14,6 +14,10 @@ func extractFeed(data *gofeed.Feed) *models.Feed {
 		image = &data.Image.URL
 	}
 
+	if image == nil {
+		image = fetchIcon(data.Link)
+	}
+
 	feed := models.Feed{
 		Title:       data.Title,
 		Link:        data.Link,
