@@ -1,0 +1,21 @@
+{{template "partials/header.html" .}}
+
+<h2>Feeds</h2>
+
+<ul class="feeds">
+	{{range .Feeds}}
+
+	<li class="feed">
+		<a href="{{.Link}}">
+			{{template "partials/feed-icon.html" .}}
+			<div class="feed-content">
+				<h3 class="feed-title">{{.Title}}</h3>
+				<p class="feed-description">{{.Description}}</p>
+			</div>
+		</a>
+	</li>
+
+	{{end}}
+</ul>
+
+{{template "partials/footer.html" .}}

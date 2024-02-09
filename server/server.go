@@ -19,6 +19,22 @@ type ServerContext struct {
 	config *config.Config
 }
 
+// Feeds page - shows a list of all the feeds
+func feeds(c echo.Context) error {
+	ctx := c.(*ServerContext)
+
+	feeds := []models.Feed{}
+	result := ctx.db.Order("title asc").Find(&feeds)
+	if result.Error != nil {
+		return result.Error
+	}
+
+	return ctx.Render(http.StatusOK, "views/feeds.html", map[string]interface{}{
+		"Config": ctx.config,
+		"Feeds":  feeds,
+	})
+}
+
 // Index page - show a list of recent feed items
 func index(c echo.Context) error {
 	ctx := c.(*ServerContext)
@@ -73,6 +89,7 @@ func Init(db *gorm.DB, conf *config.Config) (*echo.Echo, error) {
 	}
 
 	// Routes
+	e.GET("/feeds", feeds)
 	e.GET("/", index)
 
 	return e, nil

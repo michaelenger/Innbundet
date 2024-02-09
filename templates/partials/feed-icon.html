@@ -1,0 +1,7 @@
+<div aria-hidden="true" class="feed-icon" title="{{.Title}}">
+	{{if .Image}}
+		<img src="{{.Image}}" alt="Icon for the {{.Title}} feed">
+	{{else}}
+		<span class="letter-icon">{{firstletter .Title}}</span>
+	{{end}}
+</div>

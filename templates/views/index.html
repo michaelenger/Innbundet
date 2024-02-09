@@ -6,13 +6,7 @@
 	{{range .FeedItems}}
 
 	<li class="feed-item">
-		<div aria-hidden="true" class="feed-icon" title="{{.Feed.Title}}">
-			{{if .Feed.Image}}
-				<img src="{{.Feed.Image}}" alt="Icon for the {{.Feed.Title}} feed">
-			{{else}}
-				<span class="letter-icon">{{firstletter .Feed.Title}}</span>
-			{{end}}
-		</div>
+		{{template "partials/feed-icon.html" .Feed}}
 		<div>
 			<h3 class="feed-title"><a href="{{.Link}}">{{.Title}}</a></h3>
 			<small class="feed-meta">
