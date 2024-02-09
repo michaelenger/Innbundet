@@ -10,6 +10,7 @@ func TestEnsureAbsoluteUrl(t *testing.T) {
 		"/test":               "https://example.org/test",
 		"test/thing":          "https://example.org/test/thing",
 		"http://yes.com/test": "http://yes.com/test",
+		"/feed?type=rss":      "https://example.org/feed?type=rss",
 	}
 
 	for input, expected := range tests {

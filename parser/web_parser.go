@@ -40,6 +40,7 @@ func ensureAbsoluteUrl(baseUrl, itemUrl string) string {
 	}
 
 	itemUrl, _ = url.JoinPath(baseUrl, itemUrl)
+	itemUrl, _ = url.PathUnescape(itemUrl)
 
 	return itemUrl
 }
