@@ -29,6 +29,16 @@ func ensureAbsoluteUrl(baseUrl, itemUrl string) string {
 		return itemUrl
 	}
 
+	// Use pure hostname if the item starts with "/"
+	if strings.HasPrefix(itemUrl, "/") {
+		u, err := url.Parse(baseUrl)
+		if err != nil {
+			return itemUrl
+		}
+
+		baseUrl = fmt.Sprintf("%s://%s", u.Scheme, u.Hostname())
+	}
+
 	itemUrl, _ = url.JoinPath(baseUrl, itemUrl)
 
 	return itemUrl
