@@ -48,12 +48,34 @@ h1 {
 }
 
 header {
+	align-items: center;
 	background: var(--color-border);
+	display: flex;
+	justify-content: space-between;
 	padding: var(--width-spacing);
 }
 
 img {
 	max-width: 100%;
+}
+
+nav {
+	display: block;
+	height: 32px;
+}
+
+nav a, nav a:visited {
+	color: var(--color-text);
+	display: block;
+}
+
+nav a:hover {
+	color: var(--color-link-visited);
+}
+
+nav svg {
+	height: 32px;
+	width: 32px;
 }
 
 /* Classes */
