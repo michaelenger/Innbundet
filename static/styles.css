@@ -1,12 +1,11 @@
 /* Variables */
 
 :root {
-	--color-background: #F0F7F4;
-	--color-background-content: white;
-	--color-link: #633295;
-	--color-link-visited: #B497D6;
-	--color-text: #1A1423;
-	--color-text-muted: #797482;
+	--color-background: #180A0A;
+	--color-link: #C60A72;
+	--color-link-visited: #711A75;
+	--color-text: #E8E1EA;
+	--color-text-muted: #E5B8F4;
 	--width-spacing: 1em;
 	--width-spacing-small: 0.5em;
 }
@@ -54,10 +53,6 @@ img {
 	max-width: 100%;
 }
 
-main {
-	background: var(--color-background-content);
-}
-
 /* Classes */
 
 .feed-description {
@@ -89,7 +84,6 @@ main {
 }
 
 .feed-items li {
-	border-bottom: 1px solid var(--color-background);
 	padding: var(--width-spacing);
 }
 
@@ -129,9 +123,9 @@ main {
 }
 
 .letter-icon {
-	background: var(--color-link-visited);
+	background: var(--color-text-muted);
 	border-radius: 2px;
-	color: var(--color-background-content);
+	color: var(--color-background);
 	display: block;
 	font-size: 13pt;
   	font-weight: bold;
