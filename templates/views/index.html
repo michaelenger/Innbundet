@@ -8,7 +8,7 @@
 	{{range .FeedItems}}
 
 	<li class="feed-item">
-		<div class="feed-icon" title="{{.Feed.Title}}">
+		<div aria-hidden="true" class="feed-icon" title="{{.Feed.Title}}">
 			{{if .Feed.Image}}
 				<img src="{{.Feed.Image}}" alt="Icon for the {{.Feed.Title}} feed">
 			{{else}}
