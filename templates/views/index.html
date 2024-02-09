@@ -28,7 +28,7 @@
 				<p class="feed-description">{{truncate .SimpleDescription 420}}</p>
 				{{if .Image}}
 					<div class="feed-image">
-						<img src="{{.Image}}" alt="Image for the feed item">
+						<a href="{{.Link}}"><img src="{{.Image}}" alt="Image for the feed item"></a>
 					</div>
 				{{end}}
 			</div>
