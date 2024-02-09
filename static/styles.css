@@ -2,12 +2,13 @@
 
 :root {
 	--color-background: #180A0A;
+	--color-border: #271E2B;
 	--color-link: #C60A72;
 	--color-link-visited: #711A75;
 	--color-text: #E8E1EA;
 	--color-text-muted: #E5B8F4;
-	--width-spacing: 1em;
-	--width-spacing-small: 0.5em;
+	--width-spacing: 1.3em;
+	--width-spacing-small: 0.65em;
 }
 
 /* Elements */
@@ -29,9 +30,10 @@ body {
 }
 
 footer {
+	color: var(--color-text-muted);
 	font-size: 10pt;
 	font-style: italic;
-	padding: 2em 5em;
+	padding: 0 2em 5em;
 	text-align: center;
 }
 
@@ -46,6 +48,7 @@ h1 {
 }
 
 header {
+	background: var(--color-border);
 	padding: var(--width-spacing);
 }
 
@@ -61,7 +64,7 @@ img {
 
 .feed-icon {
 	flex: 0 0 32px;
-	margin: var(--width-spacing-small);
+	margin-right: var(--width-spacing-small);
 }
 
 .feed-item {
@@ -84,12 +87,18 @@ img {
 }
 
 .feed-items li {
+	border-bottom: 1px solid var(--color-border);
 	padding: var(--width-spacing);
+}
+
+.feed-items li:last-child {
+	border-bottom: none;
 }
 
 .feed-meta {
 	color: var(--color-text-muted);
 	display: block;
+	line-height: 1em;
 	margin: var(--width-spacing-small) 0;
 }
 
@@ -111,7 +120,7 @@ img {
 }
 
 .feed-title {
-	margin: 0;
+	margin: -0.25em 0 0;
 }
 
 .feed-title a {
