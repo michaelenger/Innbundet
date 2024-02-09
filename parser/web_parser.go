@@ -135,20 +135,20 @@ func fetchIcon(siteUrl string) *string {
 	}
 
 	icon := ""
-	currentSize := 0
+	currentSize := -1
 	for _, link := range links {
 		matched, err := regexp.MatchString("icon", link.Rel)
 		if matched == false || err != nil {
 			continue
 		}
 
+		size := 0
 		sizes := strings.Split(link.Sizes, "x")
-		if len(sizes) == 0 {
-			continue
+		if len(sizes) != 0 {
+			size, _ = strconv.Atoi(sizes[0])
 		}
 
-		size, err := strconv.Atoi(sizes[0])
-		if size < currentSize || err != nil {
+		if size < currentSize {
 			continue
 		}
 
