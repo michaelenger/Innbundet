@@ -58,6 +58,16 @@ func (t *TemplateRenderer) Render(w io.Writer, name string, data interface{}, c 
 	return t.templates.ExecuteTemplate(w, name, data)
 }
 
+// Get the first letter of a given piece of text (capitalised)
+func firstLetter(text string) string {
+	if len(text) == 0 {
+		return text
+	}
+
+	return strings.ToUpper(text[0:1])
+}
+
+// Get the time which has passed since the specified time in a readable format
 func timeAgo(t time.Time) string {
 	now := time.Now()
 	if t.After(now) {
@@ -161,6 +171,7 @@ func setupTemplateRenderer(e *echo.Echo) error {
 		"dec": func(i int) int {
 			return i - 1
 		},
+		"firstletter": firstLetter,
 		"inc": func(i int) int {
 			return i + 1
 		},

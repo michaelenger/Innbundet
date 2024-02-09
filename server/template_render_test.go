@@ -5,6 +5,22 @@ import (
 	"time"
 )
 
+func TestFirstLetter(t *testing.T) {
+	tests := map[string]string{
+		"Hello":             "H",
+		"test":              "T",
+		"something to test": "S",
+		"":                  "",
+	}
+
+	for input, expected := range tests {
+		result := firstLetter(input)
+		if result != expected {
+			t.Fatalf("testing \"%v\" received \"%v\" expected \"%v\"", input, result, expected)
+		}
+	}
+}
+
 func TestTimeAgo(t *testing.T) {
 	tests := map[time.Time]string{
 		time.Now().AddDate(-1, 0, 0):                 time.Now().AddDate(-1, 0, 0).Format("2006-01-02"),

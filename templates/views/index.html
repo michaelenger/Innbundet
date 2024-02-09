@@ -11,6 +11,8 @@
 		<div class="feed-icon">
 			{{if .Feed.Image}}
 				<img src="{{.Feed.Image}}" alt="Icon for the {{.Feed.Title}} feed">
+			{{else}}
+				<span class="letter-icon">{{firstletter .Feed.Title}}</span>
 			{{end}}
 		</div>
 		<div>
