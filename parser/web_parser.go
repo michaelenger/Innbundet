@@ -84,7 +84,7 @@ loop:
 			}
 
 			break loop
-		case html.StartTagToken:
+		case html.StartTagToken, html.SelfClosingTagToken:
 			tn, _ := tokenizer.TagName()
 			if string(tn) != "link" {
 				break
