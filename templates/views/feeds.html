@@ -6,7 +6,7 @@
 	{{range .Feeds}}
 
 	<li class="feed">
-		<a href="{{.Link}}">
+		<a href="/feeds/{{.ID}}">
 			{{template "partials/feed-icon.html" .}}
 			<div class="feed-content">
 				<h3 class="feed-title">{{.Title}}</h3>

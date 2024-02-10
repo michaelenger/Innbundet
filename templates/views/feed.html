@@ -1,0 +1,10 @@
+{{template "partials/header.html" .}}
+
+<h2>{{.Feed.Title}}</h2>
+<p class="feed-description">{{.Feed.Description}}</p>
+
+{{template "partials/feed-items.html" .FeedItems}}
+
+{{template "partials/pagination.html" .}}
+
+{{template "partials/footer.html" .}}

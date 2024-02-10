@@ -19,6 +19,47 @@ type ServerContext struct {
 	config *config.Config
 }
 
+// Feed page - shows the entries in a single feed
+func feed(c echo.Context) error {
+	ctx := c.(*ServerContext)
+	id, err := strconv.Atoi(ctx.Param("id"))
+	if err != nil {
+		return err
+	}
+
+	page, err := strconv.Atoi(ctx.QueryParam("page"))
+	if err != nil || page < 1 {
+		page = 1
+	}
+
+	// Get the feed
+	feed := models.Feed{}
+	result := ctx.db.First(&feed, id)
+	if result.Error != nil {
+		return result.Error
+	}
+
+	// Get the feed items
+	feedItems := []models.FeedItem{}
+	offset := (page - 1) * ctx.config.ItemsPerPage
+	result = ctx.db.Preload("Feed").Where("feed_id = ?", id).Limit(ctx.config.ItemsPerPage).Offset(offset).Order("published desc").Find(&feedItems)
+	if result.Error != nil {
+		return result.Error
+	}
+
+	var total int64
+	ctx.db.Model(&models.FeedItem{}).Where("feed_id = ?", id).Count(&total)
+	totalPages := int(math.Ceil(float64(total) / float64(ctx.config.ItemsPerPage)))
+
+	return ctx.Render(http.StatusOK, "views/feed.html", map[string]interface{}{
+		"Config":     ctx.config,
+		"Feed":       feed,
+		"FeedItems":  feedItems,
+		"Page":       page,
+		"TotalPages": totalPages,
+	})
+}
+
 // Feeds page - shows a list of all the feeds
 func feeds(c echo.Context) error {
 	ctx := c.(*ServerContext)
@@ -89,6 +130,7 @@ func Init(db *gorm.DB, conf *config.Config) (*echo.Echo, error) {
 	}
 
 	// Routes
+	e.GET("/feeds/:id", feed)
 	e.GET("/feeds", feeds)
 	e.GET("/", index)
 

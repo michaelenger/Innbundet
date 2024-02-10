@@ -103,6 +103,10 @@ img {
 	margin-top: var(--width-spacing-small);
 }
 
+.feed-description {
+	margin: var(--width-spacing);
+}
+
 .feed-icon {
 	flex: 0 0 32px;
 	margin-right: var(--width-spacing-small);
