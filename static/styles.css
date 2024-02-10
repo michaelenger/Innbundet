@@ -93,9 +93,23 @@ img {
 	color: var(--color-link-visited);
 }
 
+#menu li:not(#menu-feeds) {
+	display: none;
+}
+
+#menu span {
+	display: none;
+}
+
 #menu svg {
 	height: 32px;
 	width: 32px;
+}
+
+#menu ul {
+	list-style: none;
+	margin: 0;
+	padding: 0;
 }
 
 /* Classes */
@@ -299,7 +313,7 @@ img {
 
 	header > * {
 		margin: 0 0 0 auto;
-		max-width: 200px;
+		max-width: 240px;
 	}
 
 	main {
@@ -309,5 +323,37 @@ img {
 
 	main > * {
 		max-width: 1080px;
+	}
+
+	#menu {
+		margin-top: var(--width-spacing-small);
+	}
+
+	#menu a {
+		border-radius: var(--width-spacing-small);
+		padding: var(--width-spacing-small);
+		text-decoration: none;
+	}
+
+	#menu a:hover,
+	#menu .current a {
+		background: var(--color-background);
+		color: var(--color-text);
+	}
+
+	#menu li:not(#menu-feeds) {
+		display: block;
+	}
+
+	#menu span {
+		display: inline;
+	}
+
+	#menu svg {
+		height: 1em;
+		margin-right: 0.5em;
+		position: relative;
+		top: 0.1em;
+		width: 1em;
 	}
 }
