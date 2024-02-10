@@ -152,6 +152,10 @@ func fetchIcon(siteUrl string) *string {
 			continue
 		}
 
+		if strings.HasPrefix(link.Href, "data:") {
+			continue // don't want to deal with this
+		}
+
 		icon = link.Href
 		currentSize = size
 	}
