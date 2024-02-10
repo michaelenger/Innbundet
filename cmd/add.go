@@ -2,8 +2,8 @@ package cmd
 
 import (
 	"bufio"
+	"errors"
 	"fmt"
-	"log"
 	"os"
 	"strconv"
 	"strings"
@@ -19,18 +19,17 @@ import (
 var verifyFeed bool
 
 // Run the add command
-func runAddCommand(cmd *cobra.Command, args []string) {
-	logger := log.Default()
+func runAddCommand(cmd *cobra.Command, args []string) error {
 	url := args[0]
 
-	// Get feed URLs
+	fmt.Printf("Getting feed URL from: %s\n", url)
 	feedUrls, err := parser.FindFeedUrls(url)
 	if err != nil {
-		logger.Fatal(err)
+		return err
 	}
 
 	if len(feedUrls) == 0 {
-		logger.Fatal(fmt.Sprintf("Unable to find a feed in %s", url))
+		return errors.New(fmt.Sprintf("Unable to find a feed in %s", url))
 	}
 
 	index := 0
@@ -44,22 +43,23 @@ func runAddCommand(cmd *cobra.Command, args []string) {
 		reader := bufio.NewReader(os.Stdin)
 		input, err := reader.ReadString('\n')
 		if err != nil {
-			logger.Fatal(err)
+			return err
 		}
 
 		input = strings.TrimSuffix(input, "\n")
 		index, err = strconv.Atoi(input)
 		if err != nil {
-			logger.Fatal(err)
+			return err
 		}
 	}
 
 	url = feedUrls[index]
+	fmt.Printf("Parsing feed from URL: %s\n", url)
 
 	// Parse the feed
 	feed, items, err := parser.ParseFeed(url)
 	if err != nil {
-		logger.Fatal(err)
+		return err
 	}
 
 	if verifyFeed {
@@ -90,46 +90,48 @@ func runAddCommand(cmd *cobra.Command, args []string) {
 			fmt.Println("")
 		}
 
-		return
+		return nil
 	}
 
 	// Read config file
 	conf, err := config.FromFile(configFile)
 	if err != nil {
-		logger.Fatal(err)
+		return err
 	}
 
 	db, err := db.Init(conf.DatabaseFile)
 	if err != nil {
-		logger.Fatal(err)
+		return err
 	}
 
-	logger.Printf("Adding/updating feed from %s", feed.Url)
+	fmt.Printf("Processing feed...")
 	feed, created, err := models.CreateOrUpdateFeed(db, feed)
 	if err != nil {
-		logger.Fatal(err)
+		return err
 	}
 
 	if created {
-		logger.Printf("..created (id=%d)", feed.ID)
+		fmt.Printf("created (id=%d)\n", feed.ID)
 	} else {
-		logger.Printf("..updated (id=%d)", feed.ID)
+		fmt.Printf("updated (id=%d)\n", feed.ID)
 	}
 
 	for _, item := range items {
-		logger.Printf("Adding/updating feed item: %s", item.Link)
+		fmt.Printf("Adding/updating feed item (%s)...", item.Link)
 		item.Feed = *feed
 		item, created, err = models.CreateOrUpdateFeedItem(db, item)
 		if err != nil {
-			logger.Fatal(err)
+			return err
 		}
 
 		if created {
-			logger.Printf("..created (id=%d)", item.ID)
+			fmt.Printf("created (id=%d)\n", item.ID)
 		} else {
-			logger.Printf("..updated (id=%d)", item.ID)
+			fmt.Printf("updated (id=%d)\n", item.ID)
 		}
 	}
+
+	return nil
 }
 
 // Add command - Add a new feed
@@ -138,7 +140,7 @@ var addCommand = &cobra.Command{
 	Short: "Add a feed",
 	Long:  "Add a feed to the list of feeds, syncing it in the process",
 	Args:  cobra.MatchAll(cobra.ExactArgs(1), cobra.OnlyValidArgs),
-	Run:   runAddCommand,
+	RunE:  runAddCommand,
 }
 
 // Initialise the sync command

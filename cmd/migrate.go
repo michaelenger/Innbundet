@@ -1,7 +1,7 @@
 package cmd
 
 import (
-	"log"
+	"fmt"
 
 	"github.com/michaelenger/innbundet/config"
 	"github.com/michaelenger/innbundet/db"
@@ -13,27 +13,23 @@ import (
 var includeExampleData bool
 
 // Run the migrate command
-func runMigrateCommand(cmd *cobra.Command, args []string) {
-	logger := log.Default()
-
-	// Read config file
+func runMigrateCommand(cmd *cobra.Command, args []string) error {
 	conf, err := config.FromFile(configFile)
 	if err != nil {
-		logger.Fatal(err)
+		return err
 	}
 
-	// Database
 	db, err := db.Init(conf.DatabaseFile)
 	if err != nil {
-		logger.Fatal(err)
+		return err
 	}
 
-	logger.Print("Migrating database models")
+	fmt.Println("Migrating database models")
 	db.AutoMigrate(&models.Feed{})
 	db.AutoMigrate(&models.FeedItem{})
 
 	if includeExampleData {
-		logger.Print("Adding example data")
+		fmt.Println("Adding example data")
 		image := "https://michaelenger.com/assets/happybass.png"
 		db.Create(&models.Feed{
 			Url:         "https://michaelenger.com/feed.rss",
@@ -58,6 +54,8 @@ func runMigrateCommand(cmd *cobra.Command, args []string) {
 			Image:       nil,
 		})
 	}
+
+	return nil
 }
 
 // Migrate command - migrate database models
@@ -65,7 +63,7 @@ var migrateCommand = &cobra.Command{
 	Use:   "migrate",
 	Short: "Initialise/migrate the database models",
 	Long:  "Initialise/migrate the database models",
-	Run:   runMigrateCommand,
+	RunE:  runMigrateCommand,
 }
 
 // Initialise the migrate command

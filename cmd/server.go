@@ -1,8 +1,6 @@
 package cmd
 
 import (
-	"log"
-
 	"github.com/michaelenger/innbundet/config"
 	"github.com/michaelenger/innbundet/db"
 	"github.com/michaelenger/innbundet/server"
@@ -13,28 +11,23 @@ import (
 var port int32
 
 // Run the server command
-func runServerCommand(cmd *cobra.Command, args []string) {
-	logger := log.Default()
-
-	// Read config file
+func runServerCommand(cmd *cobra.Command, args []string) error {
 	conf, err := config.FromFile(configFile)
 	if err != nil {
-		logger.Fatal(err)
+		return err
 	}
 
-	// Database
 	db, err := db.Init(conf.DatabaseFile)
 	if err != nil {
-		logger.Fatal(err)
+		return err
 	}
 
-	// Server
 	serv, err := server.Init(db, conf)
 	if err != nil {
-		logger.Fatal(err)
+		return err
 	}
 
-	logger.Fatal(serv.Start(":8080"))
+	return serv.Start(":8080")
 }
 
 // Server command - run the web app
@@ -42,7 +35,7 @@ var serverCommand = &cobra.Command{
 	Use:   "server",
 	Short: "Run the web app",
 	Long:  "Run the web app",
-	Run:   runServerCommand,
+	RunE:  runServerCommand,
 }
 
 // Initialise the server command

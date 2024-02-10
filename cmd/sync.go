@@ -1,7 +1,7 @@
 package cmd
 
 import (
-	"log"
+	"fmt"
 
 	"github.com/michaelenger/innbundet/config"
 	"github.com/michaelenger/innbundet/db"
@@ -11,42 +11,40 @@ import (
 )
 
 // Run the sync command
-func runSyncCommand(cmd *cobra.Command, args []string) {
-	logger := log.Default()
-
-	// Read config file
+func runSyncCommand(cmd *cobra.Command, args []string) error {
 	conf, err := config.FromFile(configFile)
 	if err != nil {
-		logger.Fatal(err)
+		return err
 	}
 
 	db, err := db.Init(conf.DatabaseFile)
 	if err != nil {
-		logger.Fatal(err)
+		return err
 	}
 
 	feeds := []models.Feed{}
 	result := db.Find(&feeds)
 	if result.Error != nil {
-		logger.Fatal(result.Error)
+		return result.Error
 	}
 
-	logger.Printf("Found %d feeds", len(feeds))
+	fmt.Printf("Found %d feeds\n", len(feeds))
 
 	for _, feed := range feeds {
-		logger.Printf("Syncing %s (%d)", feed.Url, feed.ID)
+		fmt.Printf("Syncing %s (%d)\n", feed.Url, feed.ID)
 
 		feed, items, err := parser.ParseFeed(feed.Url)
 		if err != nil {
-			logger.Fatal(err)
+			fmt.Printf(" ERROR! Unable to parse feed: %s\n", err)
+			continue // don't stop us from syncing the other feeds
 		}
 
 		feed, _, err = models.CreateOrUpdateFeed(db, feed)
 		if err != nil {
-			logger.Fatal(err)
+			return err
 		}
 
-		logger.Print("..updated metadata")
+		fmt.Println("..updated metadata")
 
 		createdCount := 0
 		updatedCount := 0
@@ -54,7 +52,7 @@ func runSyncCommand(cmd *cobra.Command, args []string) {
 			item.Feed = *feed
 			_, created, err := models.CreateOrUpdateFeedItem(db, item)
 			if err != nil {
-				logger.Fatal(err)
+				return err
 			}
 
 			if created {
@@ -65,12 +63,14 @@ func runSyncCommand(cmd *cobra.Command, args []string) {
 		}
 
 		if createdCount != 0 {
-			logger.Printf("..added %d feed items", createdCount)
+			fmt.Printf("..created %d feed items\n", createdCount)
 		}
 		if updatedCount != 0 {
-			logger.Printf("..updated %d feed items", updatedCount)
+			fmt.Printf("..updated %d feed items\n", updatedCount)
 		}
 	}
+
+	return nil
 }
 
 // Sync command - download
@@ -78,7 +78,7 @@ var syncCommand = &cobra.Command{
 	Use:   "sync",
 	Short: "Syncronise the feeds",
 	Long:  "Syncronise the feeds, downloading any new feed items and removing old ones",
-	Run:   runSyncCommand,
+	RunE:  runSyncCommand,
 }
 
 // Initialise the sync command
