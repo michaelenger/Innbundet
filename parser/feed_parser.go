@@ -85,6 +85,9 @@ func ParseFeed(url string) (*models.Feed, []*models.FeedItem, error) {
 
 	feed := extractFeed(data)
 	feed.Url = url
+	if feed.Link == "" {
+		feed.Link = getHostname(url)
+	}
 
 	items := extractFeedItems(data)
 

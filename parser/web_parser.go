@@ -22,6 +22,16 @@ type linkElement struct {
 	Type  string
 }
 
+// Convert a source URL to its scheme and hostname
+func getHostname(sourceUrl string) string {
+	u, err := url.Parse(sourceUrl)
+	if err != nil {
+		return sourceUrl
+	}
+
+	return fmt.Sprintf("%s://%s", u.Scheme, u.Host)
+}
+
 // Ensure that the URL to an item is an absolute URL, adding in the base if not
 func ensureAbsoluteUrl(baseUrl, itemUrl string) string {
 	u, err := url.Parse(itemUrl)
@@ -31,12 +41,7 @@ func ensureAbsoluteUrl(baseUrl, itemUrl string) string {
 
 	// Use pure hostname if the item starts with "/"
 	if strings.HasPrefix(itemUrl, "/") {
-		u, err := url.Parse(baseUrl)
-		if err != nil {
-			return itemUrl
-		}
-
-		baseUrl = fmt.Sprintf("%s://%s", u.Scheme, u.Hostname())
+		baseUrl = getHostname(baseUrl)
 	}
 
 	itemUrl, _ = url.JoinPath(baseUrl, itemUrl)
@@ -122,12 +127,7 @@ func fetchIcon(siteUrl string) *string {
 
 	// Haven't found any links, try the root URL
 	if len(links) == 0 {
-		u, err := url.Parse(siteUrl)
-		if err != nil {
-			return nil
-		}
-
-		siteUrl = fmt.Sprintf("%s://%s", u.Scheme, u.Hostname())
+		siteUrl = getHostname(siteUrl)
 		links, err = fetchLinkElements(siteUrl)
 		if err != nil {
 			return nil
