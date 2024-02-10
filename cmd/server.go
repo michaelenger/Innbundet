@@ -1,9 +1,12 @@
 package cmd
 
 import (
+	"fmt"
+
 	"github.com/michaelenger/innbundet/config"
 	"github.com/michaelenger/innbundet/db"
 	"github.com/michaelenger/innbundet/server"
+	"github.com/rs/zerolog/log"
 	"github.com/spf13/cobra"
 )
 
@@ -27,7 +30,8 @@ func runServerCommand(cmd *cobra.Command, args []string) error {
 		return err
 	}
 
-	return serv.Start(":8080")
+	log.Info().Int32("port", port).Msg("Starting server")
+	return serv.Start(fmt.Sprintf(":%d", port))
 }
 
 // Server command - run the web app

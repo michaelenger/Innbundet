@@ -9,6 +9,7 @@ import (
 	"github.com/labstack/echo/v4/middleware"
 	"github.com/michaelenger/innbundet/config"
 	"github.com/michaelenger/innbundet/models"
+	"github.com/rs/zerolog/log"
 	"gorm.io/gorm"
 )
 
@@ -109,6 +110,7 @@ func Init(db *gorm.DB, conf *config.Config) (*echo.Echo, error) {
 	// Echo instance
 	e := echo.New()
 	e.HideBanner = true
+	e.HidePort = true
 
 	// Custom context
 	e.Use(func(next echo.HandlerFunc) echo.HandlerFunc {
@@ -122,7 +124,28 @@ func Init(db *gorm.DB, conf *config.Config) (*echo.Echo, error) {
 	e.Static("/assets", "static")
 
 	// Middleware
-	e.Use(middleware.Logger())
+	e.Use(middleware.RequestLoggerWithConfig(middleware.RequestLoggerConfig{
+		LogError:    true,
+		LogURI:      true,
+		LogStatus:   true,
+		HandleError: true,
+		LogValuesFunc: func(c echo.Context, v middleware.RequestLoggerValues) error {
+			if v.Error == nil {
+				log.Info().
+					Str("URI", v.URI).
+					Int("status", v.Status).
+					Msg("REQUEST")
+			} else {
+				log.Error().
+					Err(v.Error).
+					Str("URI", v.URI).
+					Int("status", v.Status).
+					Msg("REQUEST_ERROR")
+			}
+
+			return nil
+		},
+	}))
 	e.Use(middleware.Recover())
 	err := setupTemplateRenderer(e)
 	if err != nil {

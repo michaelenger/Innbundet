@@ -1,9 +1,11 @@
 package config
 
 import (
-	"log"
+	"errors"
+	"fmt"
 	"os"
 
+	"github.com/rs/zerolog/log"
 	"gopkg.in/yaml.v2"
 )
 
@@ -17,8 +19,6 @@ type Config struct {
 
 // Read the config from a file path.
 func FromFile(filePath string) (*Config, error) {
-	logger := log.Default()
-
 	conf := Config{
 		"Innbundet",
 		"Tiny RSS reader.",
@@ -27,19 +27,23 @@ func FromFile(filePath string) (*Config, error) {
 	}
 
 	if _, err := os.Stat(filePath); os.IsNotExist(err) {
-		logger.Printf("Unable to read config file at: %s; using default values", filePath)
+		log.Warn().
+			Str("path", filePath).
+			Msg("Unable to find config file; using default values")
 		return &conf, nil
 	}
+	log.Info().
+		Str("path", filePath).
+		Msg("Reading config file")
 
-	logger.Printf("Reading config from: %s", filePath)
 	contents, err := os.ReadFile(filePath)
 	if err != nil {
-		return nil, err
+		return nil, errors.New(fmt.Sprintf("Unable to read config file: %s", err))
 	}
 
 	err = yaml.Unmarshal([]byte(contents), &conf)
 	if err != nil {
-		return nil, err
+		return nil, errors.New(fmt.Sprintf("Unable to unmarshal config file: %s", err))
 	}
 
 	return &conf, nil
