@@ -133,6 +133,7 @@ img {
 
 .feed-item img {
 	display: block;
+	width: 100%;
 }
 
 .feed-icon .letter-icon {
