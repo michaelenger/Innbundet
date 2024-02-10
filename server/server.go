@@ -52,8 +52,7 @@ func feed(c echo.Context) error {
 	ctx.db.Model(&models.FeedItem{}).Where("feed_id = ?", id).Count(&total)
 	totalPages := int(math.Ceil(float64(total) / float64(ctx.config.ItemsPerPage)))
 
-	return ctx.Render(http.StatusOK, "views/feed.html", map[string]interface{}{
-		"Config":     ctx.config,
+	return renderTemplate(ctx, "views/feed.html", map[string]interface{}{
 		"Feed":       feed,
 		"FeedItems":  feedItems,
 		"Page":       page,
@@ -71,9 +70,8 @@ func feeds(c echo.Context) error {
 		return result.Error
 	}
 
-	return ctx.Render(http.StatusOK, "views/feeds.html", map[string]interface{}{
-		"Config": ctx.config,
-		"Feeds":  feeds,
+	return renderTemplate(ctx, "views/feeds.html", map[string]interface{}{
+		"Feeds": feeds,
 	})
 }
 
@@ -97,12 +95,19 @@ func index(c echo.Context) error {
 	ctx.db.Model(&models.FeedItem{}).Count(&total)
 	totalPages := int(math.Ceil(float64(total) / float64(ctx.config.ItemsPerPage)))
 
-	return ctx.Render(http.StatusOK, "views/index.html", map[string]interface{}{
-		"Config":     ctx.config,
+	return renderTemplate(ctx, "views/index.html", map[string]interface{}{
 		"FeedItems":  feedItems,
 		"Page":       page,
 		"TotalPages": totalPages,
 	})
+}
+
+// Render a template in the given context
+func renderTemplate(ctx *ServerContext, template string, data map[string]interface{}) error {
+	data["Config"] = ctx.config
+	data["Context"] = ctx
+
+	return ctx.Render(http.StatusOK, template, data)
 }
 
 // Initialise the server
