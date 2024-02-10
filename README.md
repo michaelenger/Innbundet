@@ -2,6 +2,8 @@
 
 Personal RSS reader, inspired by [reedi](https://github.com/facundoolano/feedi).
 
+![Screenshot](https://github.com/michaelenger/innbundet/raw/main/screenshot.png)
+
 ## Requirements
 
 * Go
