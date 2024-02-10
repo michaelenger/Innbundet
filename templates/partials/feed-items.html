@@ -10,7 +10,7 @@
 				{{if .Author}}
 					<span>{{.Author}}</span>
 				{{end}}
-				<a href="{{urlbase .Link}}">{{urlhost .Link}}</a>
+				<a href="{{urlbase .Feed.Link}}">{{urlhost .Feed.Link}}</a>
 			</small>
 			<div class="feed-content">
 				<p class="feed-description">{{truncate .SimpleDescription 420}}</p>
