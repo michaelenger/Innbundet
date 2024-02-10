@@ -14,46 +14,47 @@
 </head>
 
 <body>
-    <header>
-        <h1>
-            <a href="/">
-                <svg stroke-width="1.5" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" color="currentColor"><path d="M5 19.5V5C5 3.89543 5.89543 3 7 3H18.4C18.7314 3 19 3.26863 19 3.6V21" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"></path><path d="M9 7L15 7" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"></path><path d="M6.5 15L19 15" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"></path><path d="M6.5 18L19 18" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"></path><path d="M6.5 21L19 21" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"></path><path d="M6.5 18C5.5 18 5 17.3284 5 16.5C5 15.6716 5.5 15 6.5 15" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path><path d="M6.5 21C5.5 21 5 20.3284 5 19.5C5 18.6716 5.5 18 6.5 18" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path></svg>
-                {{.Config.Title}}
-            </a>
-        </h1>
-        <nav id="menu">
-            <ul>
-                <li
-                    id="menu-home"
-                    {{if eq .Context.Path "/"}}class="current"{{end}}
-                >
-                    <a href="/">
-                        <svg viewBox="0 0 24 24" stroke-width="1.5" fill="none" xmlns="http://www.w3.org/2000/svg" color="currentColor"><path d="M2 8L11.7317 3.13416C11.9006 3.04971 12.0994 3.0497 12.2683 3.13416L22 8" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path><path d="M20 11V19C20 20.1046 19.1046 21 18 21H6C4.89543 21 4 20.1046 4 19V11" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path></svg>
-                        <span>Home</span>
-                    </a>
-                </li>
-                <li
-                    id="menu-feeds"
-                    {{if eq .Context.Path "/feeds"}}class="current"{{end}}
-                >
-                    <a href="/feeds">
-                        <svg viewBox="0 0 24 24" stroke-width="1.5" fill="none" xmlns="http://www.w3.org/2000/svg" color="currentColor"><path d="M7 18H10.5H14" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path><path d="M7 14H7.5H8" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path><path d="M7 10H8.5H10" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path><path d="M7 2L16.5 2L21 6.5V19" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path><path d="M3 20.5V6.5C3 5.67157 3.67157 5 4.5 5H14.2515C14.4106 5 14.5632 5.06321 14.6757 5.17574L17.8243 8.32426C17.9368 8.43679 18 8.5894 18 8.74853V20.5C18 21.3284 17.3284 22 16.5 22H4.5C3.67157 22 3 21.3284 3 20.5Z" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path><path d="M14 5V8.4C14 8.73137 14.2686 9 14.6 9H18" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path></svg>
-                        <span>Feeds</span>
-                    </a>
-                </li>
-                {{range .Feeds}}
+    <div id="container">
+        <header>
+            <h1>
+                <a href="/">
+                    <svg stroke-width="1.5" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" color="currentColor"><path d="M5 19.5V5C5 3.89543 5.89543 3 7 3H18.4C18.7314 3 19 3.26863 19 3.6V21" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"></path><path d="M9 7L15 7" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"></path><path d="M6.5 15L19 15" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"></path><path d="M6.5 18L19 18" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"></path><path d="M6.5 21L19 21" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"></path><path d="M6.5 18C5.5 18 5 17.3284 5 16.5C5 15.6716 5.5 15 6.5 15" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path><path d="M6.5 21C5.5 21 5 20.3284 5 19.5C5 18.6716 5.5 18 6.5 18" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+                    {{.Config.Title}}
+                </a>
+            </h1>
+            <nav id="menu">
+                <ul>
                     <li
-                        {{if and (eq $.Context.Path "/feeds/:id") (eq $.Feed.ID .ID)}}class="current"{{end}}
+                        id="menu-home"
+                        {{if eq .Context.Path "/"}}class="current"{{end}}
                     >
-                        <a href="/feeds/{{.ID}}">
-                            {{template "partials/feed-icon.html" .}}
-                            <span>{{.Title}}</span>
+                        <a href="/">
+                            <svg viewBox="0 0 24 24" stroke-width="1.5" fill="none" xmlns="http://www.w3.org/2000/svg" color="currentColor"><path d="M2 8L11.7317 3.13416C11.9006 3.04971 12.0994 3.0497 12.2683 3.13416L22 8" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path><path d="M20 11V19C20 20.1046 19.1046 21 18 21H6C4.89543 21 4 20.1046 4 19V11" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+                            <span>Home</span>
                         </a>
                     </li>
+                    <li
+                        id="menu-feeds"
+                        {{if eq .Context.Path "/feeds"}}class="current"{{end}}
+                    >
+                        <a href="/feeds">
+                            <svg viewBox="0 0 24 24" stroke-width="1.5" fill="none" xmlns="http://www.w3.org/2000/svg" color="currentColor"><path d="M7 18H10.5H14" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path><path d="M7 14H7.5H8" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path><path d="M7 10H8.5H10" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path><path d="M7 2L16.5 2L21 6.5V19" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path><path d="M3 20.5V6.5C3 5.67157 3.67157 5 4.5 5H14.2515C14.4106 5 14.5632 5.06321 14.6757 5.17574L17.8243 8.32426C17.9368 8.43679 18 8.5894 18 8.74853V20.5C18 21.3284 17.3284 22 16.5 22H4.5C3.67157 22 3 21.3284 3 20.5Z" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path><path d="M14 5V8.4C14 8.73137 14.2686 9 14.6 9H18" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+                            <span>Feeds</span>
+                        </a>
+                    </li>
+                    {{range .Feeds}}
+                        <li
+                            {{if and (eq $.Context.Path "/feeds/:id") (eq $.Feed.ID .ID)}}class="current"{{end}}
+                        >
+                            <a href="/feeds/{{.ID}}">
+                                {{template "partials/feed-icon.html" .}}
+                                <span>{{.Title}}</span>
+                            </a>
+                        </li>
 
-                {{end}}
-            </ul>
-        </nav>
-    </header>
+                    {{end}}
+                </ul>
+            </nav>
+        </header>
 
-    <main>
+        <main>

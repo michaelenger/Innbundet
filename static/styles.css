@@ -296,20 +296,11 @@ img {
 /* Desktop size */
 
 @media (min-width: 1280px) {
-	body {
-		display: grid;
-		grid-template-columns: 1fr 3fr 1fr;
-	}
-
-	footer {
-		grid-column: 2;
-		grid-row: 2;
-	}
-
 	header {
+		box-sizing: border-box;
 		display: block;
-		grid-column: 1;
-		grid-row: 1 / span 2;
+		flex: 2 1 auto;
+		min-height: 100vh;
 	}
 
 	header > * {
@@ -318,16 +309,21 @@ img {
 	}
 
 	main {
-		grid-column: 2 / span 2;
-		grid-row: 1;
+		flex: 3 1 auto;
 	}
 
 	main > * {
 		max-width: 1080px;
 	}
 
+	#container {
+		display: flex;
+		justify-content: center;
+	}
+
 	#menu {
 		font-size: 10pt;
+		height: auto;
 		margin-top: var(--width-spacing-small);
 	}
 
