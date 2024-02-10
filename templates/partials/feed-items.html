@@ -1,0 +1,27 @@
+<ul class="feed-items">
+	{{range .}}
+
+	<li class="feed-item">
+		{{template "partials/feed-icon.html" .Feed}}
+		<div>
+			<h3 class="feed-title"><a href="{{.Link}}">{{.Title}}</a></h3>
+			<small class="feed-meta">
+				<time datetime="{{.Published}}">{{timeago .Published}}</time>
+				{{if .Author}}
+					<span>{{.Author}}</span>
+				{{end}}
+				<a href="{{urlbase .Link}}">{{urlhost .Link}}</a>
+			</small>
+			<div class="feed-content">
+				<p class="feed-description">{{truncate .SimpleDescription 420}}</p>
+				{{if .Image}}
+					<div class="feed-image">
+						<a href="{{.Link}}"><img src="{{.Image}}" alt="Image for the feed item"></a>
+					</div>
+				{{end}}
+			</div>
+		</div>
+	</li>
+
+	{{end}}
+</ul>

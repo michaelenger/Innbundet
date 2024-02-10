@@ -1,0 +1,13 @@
+<nav class="pagination">
+	<div>
+		{{if gt .Page 1}}
+			<a class="page-previous" href="?page={{dec .Page}}">Previous Page</a>
+		{{end}}
+	</div>
+
+	<div>
+		{{if lt .Page .TotalPages}}
+			<a class="page-next" href="?page={{inc .Page}}">Next Page</a>
+		{{end}}
+	</div>
+</nav>

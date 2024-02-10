@@ -210,28 +210,28 @@ img {
 	width: 32px;
 }
 
-.page-navigation {
+.pagination {
 	display: flex;
 	font-weight: bold;
 	justify-content: space-between;
 	padding: 1.5em;
 }
 
-.page-navigation a {
+.pagination a {
 	color: var(--color-link);
 	display: block;
 	text-decoration: none;
 }
 
-.page-navigation a:hover {
+.pagination a:hover {
 	color: var(--color-text);
 }
 
-.page-next::after {
+.pagination .page-next::after {
 	content: " >";
 }
 
-.page-previous::before {
+.pagination .page-previous::before {
 	content: "< ";
 }
 
