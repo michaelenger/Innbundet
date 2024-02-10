@@ -84,3 +84,13 @@ You can remove a feed using the `remove` subcommand and the feed's ID:
 ```shell
 innbundet remove 123
 ```
+
+## TODO
+
+Things that may be fun to add:
+
+* Bookmarking feed items to keep them for reading later
+* Managing feeds via the frontend
+* Hide feeds from the main feed list (for feeds that have lots of items)
+* Add tags to feeds so you can see a limited frontpage
+* Expose sync errors to the frontend somehow
