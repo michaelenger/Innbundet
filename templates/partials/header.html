@@ -23,7 +23,8 @@
         </h1>
         <nav id="menu">
             <ul>
-                <li id="menu-home"
+                <li
+                    id="menu-home"
                     {{if eq .Context.Path "/"}}class="current"{{end}}
                 >
                     <a href="/">
@@ -31,7 +32,8 @@
                         <span>Home</span>
                     </a>
                 </li>
-                <li id="menu-feeds"
+                <li
+                    id="menu-feeds"
                     {{if eq .Context.Path "/feeds"}}class="current"{{end}}
                 >
                     <a href="/feeds">
@@ -39,6 +41,17 @@
                         <span>Feeds</span>
                     </a>
                 </li>
+                {{range .Feeds}}
+                    <li
+                        {{if and (eq $.Context.Path "/feeds/:id") (eq $.Feed.ID .ID)}}class="current"{{end}}
+                    >
+                        <a href="/feeds/{{.ID}}">
+                            {{template "partials/feed-icon.html" .}}
+                            <span>{{.Title}}</span>
+                        </a>
+                    </li>
+
+                {{end}}
             </ul>
         </nav>
     </header>

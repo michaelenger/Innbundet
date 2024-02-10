@@ -64,15 +64,7 @@ func feed(c echo.Context) error {
 func feeds(c echo.Context) error {
 	ctx := c.(*ServerContext)
 
-	feeds := []models.Feed{}
-	result := ctx.db.Order("title asc").Find(&feeds)
-	if result.Error != nil {
-		return result.Error
-	}
-
-	return renderTemplate(ctx, "views/feeds.html", map[string]interface{}{
-		"Feeds": feeds,
-	})
+	return renderTemplate(ctx, "views/feeds.html", map[string]interface{}{})
 }
 
 // Index page - show a list of recent feed items
@@ -102,10 +94,18 @@ func index(c echo.Context) error {
 	})
 }
 
-// Render a template in the given context
+// Render a template in the given context ensuring the default data is present
 func renderTemplate(ctx *ServerContext, template string, data map[string]interface{}) error {
 	data["Config"] = ctx.config
 	data["Context"] = ctx
+
+	feeds := []models.Feed{}
+	result := ctx.db.Order("title asc").Find(&feeds)
+	if result.Error != nil {
+		return result.Error
+	}
+
+	data["Feeds"] = feeds
 
 	return ctx.Render(http.StatusOK, template, data)
 }

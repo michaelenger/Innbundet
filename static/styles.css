@@ -327,13 +327,17 @@ img {
 	}
 
 	#menu {
+		font-size: 10pt;
 		margin-top: var(--width-spacing-small);
 	}
 
 	#menu a {
 		border-radius: var(--width-spacing-small);
+		overflow: hidden;
 		padding: var(--width-spacing-small);
 		text-decoration: none;
+		text-overflow: ellipsis;
+		white-space: nowrap;
 	}
 
 	#menu a:hover,
@@ -350,11 +354,23 @@ img {
 		display: inline;
 	}
 
-	#menu svg {
+	#menu svg,
+	#menu .feed-icon {
+		display: inline-block;
 		height: 1em;
 		margin-right: 0.5em;
 		position: relative;
 		top: 0.1em;
 		width: 1em;
+	}
+
+	#menu .feed-icon .letter-icon {
+		display: inline-block;
+		font-size: 8pt;
+		height: 100%;
+		line-height: 1.3em;
+		position: relative;
+		top: -0.2em;
+		width: 100%;
 	}
 }
