@@ -248,3 +248,31 @@ img {
 	white-space: nowrap;
 	width: 1px;
 }
+
+/* Portrait tablet size */
+
+@media (min-width: 768px) {
+
+	.feed-items .feed-content {
+		display: flex;
+	}
+
+	.feed-items .feed-description {
+		order: 2;
+	}
+
+	.feed-items .feed-image {
+		flex: 0 0 30%;
+		margin-right: var(--width-spacing-small);
+		margin-top: 0;
+		order: 1;
+	}
+}
+
+/* Landscape tablet size */
+
+@media (min-width: 1024px) {
+	.feed-items .feed-image {
+		flex: 0 0 25%;
+	}
+}
