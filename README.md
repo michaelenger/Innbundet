@@ -76,3 +76,11 @@ You can also provide a web URL and it will look for a feed in the site's
 ```shell
 innbundet add https://michaelenger.com/
 ```
+
+### Removing Feeds
+
+You can remove a feed using the `remove` subcommand and the feed's ID:
+
+```shell
+innbundet remove 123
+```
