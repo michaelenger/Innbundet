@@ -34,6 +34,27 @@ func extractFeed(url string, data *gofeed.Feed) *models.Feed {
 	return &feed
 }
 
+// Extract the image from a given feed item
+func extractFeedItemImage(item *gofeed.Item) *string {
+	if item.Image != nil {
+		return &item.Image.URL
+	}
+
+	if media, ok := item.Extensions["media"]; ok {
+		if content, ok := media["content"]; ok && len(content) != 0 {
+			if url, ok := content[0].Attrs["url"]; ok {
+				return &url
+			}
+		}
+	}
+
+	if image, ok := item.Custom["image"]; ok {
+		return &image
+	}
+
+	return nil
+}
+
 // Extract FeedItems from the data
 func extractFeedItems(data *gofeed.Feed) []*models.FeedItem {
 	var feedAuthor string
@@ -49,17 +70,6 @@ func extractFeedItems(data *gofeed.Feed) []*models.FeedItem {
 			feedAuthor = item.Authors[0].Name
 		}
 
-		var image *string
-		if item.Image != nil {
-			image = &item.Image.URL
-		} else if media, ok := item.Extensions["media"]; ok {
-			if content, ok := media["content"]; ok && len(content) != 0 {
-				if url, ok := content[0].Attrs["url"]; ok {
-					image = &url
-				}
-			}
-		}
-
 		published := time.Now()
 		if item.PublishedParsed != nil {
 			published = *item.PublishedParsed
@@ -70,7 +80,7 @@ func extractFeedItems(data *gofeed.Feed) []*models.FeedItem {
 			Link:        item.Link,
 			Description: item.Description,
 			Author:      author,
-			Image:       image,
+			Image:       extractFeedItemImage(item),
 			Published:   published,
 		}
 
