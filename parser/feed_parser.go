@@ -8,19 +8,25 @@ import (
 )
 
 // Extract a Feed from the feed data
-func extractFeed(data *gofeed.Feed) *models.Feed {
+func extractFeed(url string, data *gofeed.Feed) *models.Feed {
 	var image *string
+
+	link := data.Link
+	if link == "" {
+		link = getHostname(url)
+	}
+
 	if data.Image != nil {
 		image = &data.Image.URL
 	}
 
 	if image == nil {
-		image = fetchIcon(data.Link)
+		image = fetchIcon(link)
 	}
 
 	feed := models.Feed{
 		Title:       data.Title,
-		Link:        data.Link,
+		Link:        link,
 		Description: data.Description,
 		Image:       image,
 	}
@@ -83,11 +89,8 @@ func ParseFeed(url string) (*models.Feed, []*models.FeedItem, error) {
 		return nil, nil, error
 	}
 
-	feed := extractFeed(data)
+	feed := extractFeed(url, data)
 	feed.Url = url
-	if feed.Link == "" {
-		feed.Link = getHostname(url)
-	}
 
 	items := extractFeedItems(data)
 
