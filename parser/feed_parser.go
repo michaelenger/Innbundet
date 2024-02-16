@@ -1,10 +1,12 @@
 package parser
 
 import (
+	"fmt"
 	"time"
 
 	"github.com/michaelenger/innbundet/models"
 	"github.com/mmcdole/gofeed"
+	"github.com/rs/zerolog/log"
 )
 
 // Extract a Feed from the feed data
@@ -94,6 +96,10 @@ func extractFeedItems(data *gofeed.Feed) []*models.FeedItem {
 func ParseFeed(url string) (*models.Feed, []*models.FeedItem, error) {
 	parser := gofeed.NewParser()
 
+	log.Debug().
+		Str("url", url).
+		Msg("Parsing feed")
+
 	data, error := parser.ParseURL(url)
 	if error != nil {
 		return nil, nil, error
@@ -103,6 +109,7 @@ func ParseFeed(url string) (*models.Feed, []*models.FeedItem, error) {
 	feed.Url = url
 
 	items := extractFeedItems(data)
+	log.Debug().Msg(fmt.Sprintf("Found %d feed items", len(items)))
 
 	return feed, items, nil
 }
