@@ -43,6 +43,12 @@ innbundet server
 
 This will serve the application on http://localhost:8080
 
+You can override the port by using the `PORT` environment variable:
+
+```shell
+PORT=5050 innbundet server
+```
+
 All the commands will attempt to read the config from a config file, which is
 assumed to be `config.yaml` but can also be set using the `--config` parameter:
 

@@ -2,6 +2,7 @@ package cmd
 
 import (
 	"fmt"
+	"os"
 
 	"github.com/michaelenger/innbundet/config"
 	"github.com/michaelenger/innbundet/db"
@@ -9,9 +10,6 @@ import (
 	"github.com/rs/zerolog/log"
 	"github.com/spf13/cobra"
 )
-
-// Port to serve the site on
-var port int32
 
 // Run the server command
 func runServerCommand(cmd *cobra.Command, args []string) error {
@@ -30,8 +28,13 @@ func runServerCommand(cmd *cobra.Command, args []string) error {
 		return err
 	}
 
-	log.Info().Int32("port", port).Msg("Starting server")
-	return serv.Start(fmt.Sprintf(":%d", port))
+	port := os.Getenv("PORT")
+	if port == "" {
+		port = "8080"
+	}
+
+	log.Info().Str("port", port).Msg("Starting server")
+	return serv.Start(fmt.Sprintf(":%s", port))
 }
 
 // Server command - run the web app
@@ -44,7 +47,5 @@ var serverCommand = &cobra.Command{
 
 // Initialise the server command
 func init() {
-	serverCommand.Flags().Int32VarP(&port, "port", "p", 8080, "Port to serve the app on")
-
 	rootCmd.AddCommand(serverCommand)
 }
