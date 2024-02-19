@@ -42,7 +42,7 @@ var serverCommand = &cobra.Command{
 	Use:   "server",
 	Short: "Run the web app",
 	Long:  "Run the web app",
-	RunE:  runServerCommand,
+	Run:   wrapRunFn(runServerCommand),
 }
 
 // Initialise the server command

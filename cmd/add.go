@@ -140,7 +140,7 @@ var addCommand = &cobra.Command{
 	Short: "Add a feed",
 	Long:  "Add a feed to the list of feeds, syncing it in the process",
 	Args:  cobra.MatchAll(cobra.ExactArgs(1), cobra.OnlyValidArgs),
-	RunE:  runAddCommand,
+	Run:   wrapRunFn(runAddCommand),
 }
 
 // Initialise the sync command

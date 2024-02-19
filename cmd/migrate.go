@@ -63,7 +63,7 @@ var migrateCommand = &cobra.Command{
 	Use:   "migrate",
 	Short: "Initialise/migrate the database models",
 	Long:  "Initialise/migrate the database models",
-	RunE:  runMigrateCommand,
+	Run:   wrapRunFn(runMigrateCommand),
 }
 
 // Initialise the migrate command

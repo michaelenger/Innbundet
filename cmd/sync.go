@@ -78,7 +78,7 @@ var syncCommand = &cobra.Command{
 	Use:   "sync",
 	Short: "Syncronise the feeds",
 	Long:  "Syncronise the feeds, downloading any new feed items and removing old ones",
-	RunE:  runSyncCommand,
+	Run:   wrapRunFn(runSyncCommand),
 }
 
 // Initialise the sync command

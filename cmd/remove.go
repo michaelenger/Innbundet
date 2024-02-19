@@ -76,7 +76,7 @@ var removeCommand = &cobra.Command{
 	Short: "Remove a feed",
 	Long:  "Remove a feed to the list of feeds, including all its feed items",
 	Args:  cobra.MatchAll(cobra.ExactArgs(1), cobra.OnlyValidArgs),
-	RunE:  runRemoveCommand,
+	Run:   wrapRunFn(runRemoveCommand),
 }
 
 // Initialise the command
