@@ -12,6 +12,7 @@ import (
 	"github.com/michaelenger/innbundet/db"
 	"github.com/michaelenger/innbundet/models"
 	"github.com/michaelenger/innbundet/parser"
+	"github.com/rs/zerolog/log"
 	"github.com/spf13/cobra"
 )
 
@@ -22,7 +23,9 @@ var verifyFeed bool
 func runAddCommand(cmd *cobra.Command, args []string) error {
 	url := args[0]
 
-	fmt.Printf("Getting feed URL from: %s\n", url)
+	log.Debug().
+		Str("url", url).
+		Msg("Getting feed URL")
 	feedUrls, err := parser.FindFeedUrls(url)
 	if err != nil {
 		return err
@@ -54,7 +57,9 @@ func runAddCommand(cmd *cobra.Command, args []string) error {
 	}
 
 	url = feedUrls[index]
-	fmt.Printf("Parsing feed from URL: %s\n", url)
+	log.Debug().
+		Str("url", url).
+		Msg("Parsing feed")
 
 	// Parse the feed
 	feed, items, err := parser.ParseFeed(url)
@@ -104,20 +109,31 @@ func runAddCommand(cmd *cobra.Command, args []string) error {
 		return err
 	}
 
-	fmt.Printf("Processing feed...")
+	log.Info().
+		Str("url", url).
+		Msg("Processing feed...")
 	feed, created, err := models.CreateOrUpdateFeed(db, feed)
 	if err != nil {
 		return err
 	}
 
 	if created {
-		fmt.Printf("created (id=%d)\n", feed.ID)
+		log.Info().
+			Uint("id", feed.ID).
+			Msg("Feed created")
 	} else {
-		fmt.Printf("updated (id=%d)\n", feed.ID)
+		log.Info().
+			Uint("id", feed.ID).
+			Msg("Feed updated")
 	}
 
+	log.Info().
+		Str("url", url).
+		Msg("Processing feed items...")
 	for _, item := range items {
-		fmt.Printf("Adding/updating feed item (%s)...", item.Link)
+		log.Debug().
+			Str("link", item.Link).
+			Msg("Processing feed item")
 		item.Feed = *feed
 		item, created, err = models.CreateOrUpdateFeedItem(db, item)
 		if err != nil {
@@ -125,9 +141,13 @@ func runAddCommand(cmd *cobra.Command, args []string) error {
 		}
 
 		if created {
-			fmt.Printf("created (id=%d)\n", item.ID)
+			log.Debug().
+				Uint("id", item.ID).
+				Msg("Feed item created")
 		} else {
-			fmt.Printf("updated (id=%d)\n", item.ID)
+			log.Debug().
+				Uint("id", item.ID).
+				Msg("Feed item updated")
 		}
 	}
 

@@ -109,7 +109,9 @@ func ParseFeed(url string) (*models.Feed, []*models.FeedItem, error) {
 	feed.Url = url
 
 	items := extractFeedItems(data)
-	log.Debug().Msg(fmt.Sprintf("Found %d feed items", len(items)))
+	log.Debug().
+		Str("url", url).
+		Msg(fmt.Sprintf("Found %d feed items", len(items)))
 
 	return feed, items, nil
 }

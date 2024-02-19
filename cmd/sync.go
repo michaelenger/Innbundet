@@ -7,6 +7,7 @@ import (
 	"github.com/michaelenger/innbundet/db"
 	"github.com/michaelenger/innbundet/models"
 	"github.com/michaelenger/innbundet/parser"
+	"github.com/rs/zerolog/log"
 	"github.com/spf13/cobra"
 )
 
@@ -22,20 +23,24 @@ func runSyncCommand(cmd *cobra.Command, args []string) error {
 		return err
 	}
 
+	log.Debug().Msg("Fetching feeds...")
 	feeds := []models.Feed{}
 	result := db.Find(&feeds)
 	if result.Error != nil {
 		return result.Error
 	}
 
-	fmt.Printf("Found %d feeds\n", len(feeds))
-
+	log.Info().Msg(fmt.Sprintf("Found %d feeds", len(feeds)))
 	for _, feed := range feeds {
-		fmt.Printf("Syncing %s (%d)\n", feed.Url, feed.ID)
+		log.Info().
+			Uint("id", feed.ID).
+			Msg("Syncing feed...")
 
 		feed, items, err := parser.ParseFeed(feed.Url)
 		if err != nil {
-			fmt.Printf(" ERROR! Unable to parse feed: %s\n", err)
+			log.Error().
+				Err(err).
+				Msg("Unable to parse feed")
 			continue // don't stop us from syncing the other feeds
 		}
 
@@ -44,7 +49,9 @@ func runSyncCommand(cmd *cobra.Command, args []string) error {
 			return err
 		}
 
-		fmt.Println("..updated metadata")
+		log.Debug().
+			Uint("id", feed.ID).
+			Msg("..updated metadata")
 
 		createdCount := 0
 		updatedCount := 0
@@ -63,10 +70,14 @@ func runSyncCommand(cmd *cobra.Command, args []string) error {
 		}
 
 		if createdCount != 0 {
-			fmt.Printf("..created %d feed items\n", createdCount)
+			log.Info().
+				Uint("id", feed.ID).
+				Msg(fmt.Sprintf("..added %d feed items", createdCount))
 		}
 		if updatedCount != 0 {
-			fmt.Printf("..updated %d feed items\n", updatedCount)
+			log.Debug().
+				Uint("id", feed.ID).
+				Msg(fmt.Sprintf("..updated %d feed items", updatedCount))
 		}
 	}
 

@@ -1,11 +1,10 @@
 package cmd
 
 import (
-	"fmt"
-
 	"github.com/michaelenger/innbundet/config"
 	"github.com/michaelenger/innbundet/db"
 	"github.com/michaelenger/innbundet/models"
+	"github.com/rs/zerolog/log"
 	"github.com/spf13/cobra"
 )
 
@@ -24,12 +23,12 @@ func runMigrateCommand(cmd *cobra.Command, args []string) error {
 		return err
 	}
 
-	fmt.Println("Migrating database models")
+	log.Info().Msg("Migrating database models...")
 	db.AutoMigrate(&models.Feed{})
 	db.AutoMigrate(&models.FeedItem{})
 
 	if includeExampleData {
-		fmt.Println("Adding example data")
+		log.Info().Msg("Adding example data...")
 		image := "https://michaelenger.com/assets/happybass.png"
 		db.Create(&models.Feed{
 			Url:         "https://michaelenger.com/feed.rss",
