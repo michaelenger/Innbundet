@@ -69,7 +69,7 @@ func extractFeedItems(data *gofeed.Feed) []*models.FeedItem {
 	for _, item := range data.Items {
 		author := feedAuthor
 		if len(item.Authors) != 0 {
-			feedAuthor = item.Authors[0].Name
+			author = item.Authors[0].Name
 		}
 
 		published := time.Now()
