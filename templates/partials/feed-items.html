@@ -9,6 +9,8 @@
 				<time datetime="{{.Published}}">{{timeago .Published}}</time>
 				{{if .Author}}
 					<span>{{.Author}}</span>
+				{{else}}
+					<span>{{.Feed.Title}}</span>
 				{{end}}
 				<a href="{{urlbase .Feed.Link}}">{{urlhost .Feed.Link}}</a>
 			</small>
