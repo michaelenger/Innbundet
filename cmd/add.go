@@ -54,6 +54,12 @@ func runAddCommand(cmd *cobra.Command, args []string) error {
 		if err != nil {
 			return err
 		}
+
+		if index < 1 || index > len(feedUrls) {
+			return errors.New(fmt.Sprintf("invalid choice: %d", index))
+		}
+
+		index = index - 1
 	}
 
 	url = feedUrls[index]
