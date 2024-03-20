@@ -56,6 +56,12 @@ assumed to be `config.yaml` but can also be set using the `--config` parameter:
 innbundet sync --config my_config.yaml
 ```
 
+All the commands also accept the `--debug` flag which will show debug output:
+
+```shell
+innbundet sync --debug
+```
+
 ### Config File
 
 The configuration file is a YAML and can contain the following:

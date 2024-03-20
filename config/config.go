@@ -32,7 +32,7 @@ func FromFile(filePath string) (*Config, error) {
 			Msg("Unable to find config file; using default values")
 		return &conf, nil
 	}
-	log.Info().
+	log.Debug().
 		Str("path", filePath).
 		Msg("Reading config file")
 
