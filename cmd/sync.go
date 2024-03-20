@@ -2,14 +2,66 @@ package cmd
 
 import (
 	"fmt"
+	"sync"
 
 	"github.com/michaelenger/innbundet/config"
 	"github.com/michaelenger/innbundet/db"
 	"github.com/michaelenger/innbundet/models"
 	"github.com/michaelenger/innbundet/parser"
-	"github.com/rs/zerolog/log"
 	"github.com/spf13/cobra"
+	"gorm.io/gorm"
 )
+
+func syncFeed(wg *sync.WaitGroup, db *gorm.DB, feedID uint) {
+	defer wg.Done()
+
+	var feed *models.Feed
+	db.Where("id = ?", feedID).Limit(1).Find(&feed)
+
+	outputText := fmt.Sprintf("Syncing feed %s (%d) ...", feed.Title, feed.ID)
+	feed, items, err := parser.ParseFeed(feed.Url)
+	if err != nil {
+		fmt.Printf("%s ERROR! Failed to parse feed: %s", outputText, err)
+		return
+	}
+
+	feed, _, err = models.CreateOrUpdateFeed(db, feed)
+	if err != nil {
+		fmt.Printf("%s ERROR! Failed to create/update feed: %s", outputText, err)
+		return
+	}
+
+	createdCount := 0
+	updatedCount := 0
+	for _, item := range items {
+		item.Feed = *feed
+		_, created, err := models.CreateOrUpdateFeedItem(db, item)
+		if err != nil {
+			fmt.Printf("%s ERROR! Failed to create/update feed item: %s", outputText, err)
+			return
+		}
+
+		if created {
+			createdCount += 1
+		} else {
+			updatedCount += 1
+		}
+	}
+
+	outputText += " SUCCESS! "
+
+	if createdCount != 0 {
+		outputText += fmt.Sprintf("%d items created", createdCount)
+	}
+	if updatedCount != 0 {
+		if createdCount != 0 {
+			outputText += ", "
+		}
+		outputText += fmt.Sprintf("%d items updated", updatedCount)
+	}
+
+	fmt.Println(outputText)
+}
 
 // Run the sync command
 func runSyncCommand(cmd *cobra.Command, args []string) error {
@@ -23,63 +75,22 @@ func runSyncCommand(cmd *cobra.Command, args []string) error {
 		return err
 	}
 
-	log.Debug().Msg("Fetching feeds...")
+	fmt.Printf("Fetching feeds... ")
 	feeds := []models.Feed{}
 	result := db.Find(&feeds)
 	if result.Error != nil {
 		return result.Error
 	}
 
-	log.Info().Msg(fmt.Sprintf("Found %d feeds", len(feeds)))
+	var wg sync.WaitGroup
+
+	fmt.Printf("%d found\n", len(feeds))
 	for _, feed := range feeds {
-		log.Info().
-			Uint("id", feed.ID).
-			Msg("Syncing feed...")
-
-		feed, items, err := parser.ParseFeed(feed.Url)
-		if err != nil {
-			log.Error().
-				Err(err).
-				Msg("Unable to parse feed")
-			continue // don't stop us from syncing the other feeds
-		}
-
-		feed, _, err = models.CreateOrUpdateFeed(db, feed)
-		if err != nil {
-			return err
-		}
-
-		log.Debug().
-			Uint("id", feed.ID).
-			Msg("..updated metadata")
-
-		createdCount := 0
-		updatedCount := 0
-		for _, item := range items {
-			item.Feed = *feed
-			_, created, err := models.CreateOrUpdateFeedItem(db, item)
-			if err != nil {
-				return err
-			}
-
-			if created {
-				createdCount += 1
-			} else {
-				updatedCount += 1
-			}
-		}
-
-		if createdCount != 0 {
-			log.Info().
-				Uint("id", feed.ID).
-				Msg(fmt.Sprintf("..added %d feed items", createdCount))
-		}
-		if updatedCount != 0 {
-			log.Debug().
-				Uint("id", feed.ID).
-				Msg(fmt.Sprintf("..updated %d feed items", updatedCount))
-		}
+		wg.Add(1)
+		go syncFeed(&wg, db, feed.ID)
 	}
+
+	wg.Wait()
 
 	return nil
 }
