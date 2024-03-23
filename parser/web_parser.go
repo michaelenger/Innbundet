@@ -10,8 +10,8 @@ import (
 	"strconv"
 	"strings"
 
+	"github.com/michaelenger/innbundet/log"
 	"github.com/mmcdole/gofeed"
-	"github.com/rs/zerolog/log"
 	"golang.org/x/net/html"
 )
 
@@ -174,23 +174,21 @@ func fetchIcon(siteUrl string) *string {
 func FindFeedUrls(siteUrl string) ([]string, error) {
 	parser := gofeed.NewParser()
 
-	log.Debug().
-		Str("url", siteUrl).
-		Msg("Parsing URL")
+	log.Debug("Parsing URL: %s", siteUrl)
+	log.Debug("Attempting to parse as feed...")
 	_, error := parser.ParseURL(siteUrl)
 	if error == nil {
-		log.Debug().
-			Str("url", siteUrl).
-			Msg("Successfully parsed as a feed")
+		log.Debug("Successfully parsed as a feed")
 		return []string{siteUrl}, nil // if we're able to parse it then it's a feed URL
 	}
 
-	log.Debug().Msg("Extracting link elements")
+	log.Debug("Treating as website")
+	log.Debug("Extracting link elements...")
 	links, err := fetchLinkElements(siteUrl)
 	if err != nil {
 		return nil, err
 	}
-	log.Debug().Msg(fmt.Sprintf("Got %d link elements", len(links)))
+	log.Debug("Got %d link elements", len(links))
 
 	var urls []string
 	for _, link := range links {
@@ -207,9 +205,7 @@ func FindFeedUrls(siteUrl string) ([]string, error) {
 		}
 
 		feedUrl := ensureAbsoluteUrl(siteUrl, link.Href)
-		log.Debug().
-			Str("url", feedUrl).
-			Msg("Added potential feed URL")
+		log.Debug("Added potential feed URL: %s", feedUrl)
 		urls = append(urls, feedUrl)
 	}
 

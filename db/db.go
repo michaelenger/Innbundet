@@ -1,7 +1,7 @@
 package db
 
 import (
-	"github.com/rs/zerolog/log"
+	"github.com/michaelenger/innbundet/log"
 	"gorm.io/driver/sqlite"
 	"gorm.io/gorm"
 	"gorm.io/gorm/logger"
@@ -9,9 +9,7 @@ import (
 
 // Initialise the database
 func Init(filePath string) (*gorm.DB, error) {
-	log.Debug().
-		Str("path", filePath).
-		Msg("Initialising database")
+	log.Debug("Initialising database: %s", filePath)
 	db, err := gorm.Open(sqlite.Open(filePath), &gorm.Config{
 		Logger: logger.Default.LogMode(logger.Silent),
 	})

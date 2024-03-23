@@ -8,14 +8,16 @@ import (
 
 	"github.com/michaelenger/innbundet/config"
 	"github.com/michaelenger/innbundet/db"
+	"github.com/michaelenger/innbundet/log"
 	"github.com/michaelenger/innbundet/models"
-	"github.com/rs/zerolog/log"
 	"github.com/spf13/cobra"
 )
 
 // Run the command
 func runRemoveCommand(cmd *cobra.Command, args []string) error {
 	feedId := args[0]
+
+	log.Debug("Using feed ID: %s", feedId)
 
 	conf, err := config.FromFile(configFile)
 	if err != nil {
@@ -28,18 +30,14 @@ func runRemoveCommand(cmd *cobra.Command, args []string) error {
 	}
 
 	// Get the feed and items
-	log.Debug().
-		Str("id", feedId).
-		Msg("Retrieving the feed")
+	log.Debug("Retrieving feed...")
 	feed := models.Feed{}
 	result := db.First(&feed, feedId)
 	if result.Error != nil {
 		return result.Error
 	}
 
-	log.Debug().
-		Str("id", feedId).
-		Msg("Retrieving the feed items")
+	log.Debug("Retrieving the feed items...")
 	feedItems := []models.FeedItem{}
 	result = db.Where("feed_id = ?", feed.ID).Find(&feedItems)
 	if result.Error != nil {
@@ -59,23 +57,21 @@ func runRemoveCommand(cmd *cobra.Command, args []string) error {
 	}
 
 	if len(feedItems) != 0 {
-		log.Debug().Msg("Deleting feed items...")
+		log.Debug("Deleting feed items...")
 		result = db.Delete(&feedItems)
 		if result.Error != nil {
 			return result.Error
 		}
-		log.Debug().Msg(fmt.Sprintf("%d rows deleted", result.RowsAffected))
+		log.Debug("%d rows deleted", result.RowsAffected)
 	}
 
-	log.Debug().
-		Uint("id", feed.ID).
-		Msg("Deleting feed...")
+	log.Debug("Deleting feed...")
 	result = db.Delete(&feed)
 	if result.Error != nil {
 		return result.Error
 	}
 
-	log.Debug().Msg(fmt.Sprintf("%d rows deleted", result.RowsAffected))
+	log.Debug("%d rows deleted", result.RowsAffected)
 
 	return nil
 }

@@ -8,8 +8,8 @@ import (
 	"github.com/labstack/echo/v4"
 	"github.com/labstack/echo/v4/middleware"
 	"github.com/michaelenger/innbundet/config"
+	"github.com/michaelenger/innbundet/log"
 	"github.com/michaelenger/innbundet/models"
-	"github.com/rs/zerolog/log"
 	"gorm.io/gorm"
 )
 
@@ -136,16 +136,9 @@ func Init(db *gorm.DB, conf *config.Config) (*echo.Echo, error) {
 		HandleError: true,
 		LogValuesFunc: func(c echo.Context, v middleware.RequestLoggerValues) error {
 			if v.Error == nil {
-				log.Info().
-					Str("URI", v.URI).
-					Int("status", v.Status).
-					Msg("REQUEST")
+				log.Info("Request: %s %s %d", v.Method, v.URI, v.Status)
 			} else {
-				log.Error().
-					Err(v.Error).
-					Str("URI", v.URI).
-					Int("status", v.Status).
-					Msg("REQUEST_ERROR")
+				log.Error("Request: %s %s %d: %v", v.Method, v.URI, v.Status, v.Error)
 			}
 
 			return nil

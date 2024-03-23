@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"os"
 
-	"github.com/rs/zerolog"
+	"github.com/michaelenger/innbundet/log"
 	"github.com/spf13/cobra"
 )
 
@@ -24,9 +24,10 @@ type runFunc func(*cobra.Command, []string) error
 func wrapRunFn(fn runFunc) func(*cobra.Command, []string) {
 	return func(cmd *cobra.Command, args []string) {
 		if debug {
-			zerolog.SetGlobalLevel(zerolog.DebugLevel)
+			// TODO set log level
+			log.SetGlobalLevel(log.DebugLevel)
 		} else {
-			zerolog.SetGlobalLevel(zerolog.InfoLevel)
+			log.SetGlobalLevel(log.InfoLevel)
 		}
 
 		err := fn(cmd, args)

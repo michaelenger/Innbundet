@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"os"
 
-	"github.com/rs/zerolog/log"
+	"github.com/michaelenger/innbundet/log"
 	"gopkg.in/yaml.v2"
 )
 
@@ -26,15 +26,11 @@ func FromFile(filePath string) (*Config, error) {
 		25,
 	}
 
+	log.Debug("Reading config file at: %s", filePath)
 	if _, err := os.Stat(filePath); os.IsNotExist(err) {
-		log.Warn().
-			Str("path", filePath).
-			Msg("Unable to find config file; using default values")
+		log.Warning("Unable to find config file; using default values", filePath)
 		return &conf, nil
 	}
-	log.Debug().
-		Str("path", filePath).
-		Msg("Reading config file")
 
 	contents, err := os.ReadFile(filePath)
 	if err != nil {

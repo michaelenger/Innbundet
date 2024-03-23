@@ -6,8 +6,8 @@ import (
 
 	"github.com/michaelenger/innbundet/config"
 	"github.com/michaelenger/innbundet/db"
+	"github.com/michaelenger/innbundet/log"
 	"github.com/michaelenger/innbundet/server"
-	"github.com/rs/zerolog/log"
 	"github.com/spf13/cobra"
 )
 
@@ -33,7 +33,7 @@ func runServerCommand(cmd *cobra.Command, args []string) error {
 		port = "8080"
 	}
 
-	log.Info().Str("port", port).Msg("Starting server")
+	log.Info("Starting server on port %s", port)
 	return serv.Start(fmt.Sprintf(":%s", port))
 }
 

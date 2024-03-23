@@ -10,9 +10,9 @@ import (
 
 	"github.com/michaelenger/innbundet/config"
 	"github.com/michaelenger/innbundet/db"
+	"github.com/michaelenger/innbundet/log"
 	"github.com/michaelenger/innbundet/models"
 	"github.com/michaelenger/innbundet/parser"
-	"github.com/rs/zerolog/log"
 	"github.com/spf13/cobra"
 )
 
@@ -23,9 +23,7 @@ var verifyFeed bool
 func runAddCommand(cmd *cobra.Command, args []string) error {
 	url := args[0]
 
-	log.Debug().
-		Str("url", url).
-		Msg("Getting feed URL")
+	log.Debug("Getting feed from URL: %s", url)
 	feedUrls, err := parser.FindFeedUrls(url)
 	if err != nil {
 		return err
@@ -63,9 +61,7 @@ func runAddCommand(cmd *cobra.Command, args []string) error {
 	}
 
 	url = feedUrls[index]
-	log.Debug().
-		Str("url", url).
-		Msg("Parsing feed")
+	log.Debug("Parsing feed: %s", url)
 
 	// Parse the feed
 	feed, items, err := parser.ParseFeed(url)
@@ -115,31 +111,21 @@ func runAddCommand(cmd *cobra.Command, args []string) error {
 		return err
 	}
 
-	log.Info().
-		Str("url", url).
-		Msg("Processing feed...")
+	log.Info("Processing feed...")
 	feed, created, err := models.CreateOrUpdateFeed(db, feed)
 	if err != nil {
 		return err
 	}
 
 	if created {
-		log.Info().
-			Uint("id", feed.ID).
-			Msg("Feed created")
+		log.Info("Feed created: %d", feed.ID)
 	} else {
-		log.Info().
-			Uint("id", feed.ID).
-			Msg("Feed updated")
+		log.Info("Feed updated: %d", feed.ID)
 	}
 
-	log.Info().
-		Str("url", url).
-		Msg("Processing feed items...")
+	log.Info("Processing feed items...")
 	for _, item := range items {
-		log.Debug().
-			Str("link", item.Link).
-			Msg("Processing feed item")
+		log.Debug("Processing feed item: %s", item.Link)
 		item.Feed = *feed
 		item, created, err = models.CreateOrUpdateFeedItem(db, item)
 		if err != nil {
@@ -147,13 +133,9 @@ func runAddCommand(cmd *cobra.Command, args []string) error {
 		}
 
 		if created {
-			log.Debug().
-				Uint("id", item.ID).
-				Msg("Feed item created")
+			log.Info("Feed item created: %d", item.ID)
 		} else {
-			log.Debug().
-				Uint("id", item.ID).
-				Msg("Feed item updated")
+			log.Info("Feed item updated: %d", item.ID)
 		}
 	}
 
