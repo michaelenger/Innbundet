@@ -6,6 +6,7 @@ import (
 
 	"github.com/michaelenger/innbundet/config"
 	"github.com/michaelenger/innbundet/db"
+	"github.com/michaelenger/innbundet/log"
 	"github.com/michaelenger/innbundet/models"
 	"github.com/michaelenger/innbundet/parser"
 	"github.com/spf13/cobra"
@@ -18,16 +19,15 @@ func syncFeed(wg *sync.WaitGroup, db *gorm.DB, feedID uint) {
 	var feed *models.Feed
 	db.Where("id = ?", feedID).Limit(1).Find(&feed)
 
-	outputText := fmt.Sprintf("Syncing feed %s (%d) ...", feed.Title, feed.ID)
 	feed, items, err := parser.ParseFeed(feed.Url)
 	if err != nil {
-		fmt.Printf("%s ERROR! Failed to parse feed: %s", outputText, err)
+		log.Error("Syncing %s (%d) failed! Unable to parse feed: %s", feed.Title, feed.ID, err)
 		return
 	}
 
 	feed, _, err = models.CreateOrUpdateFeed(db, feed)
 	if err != nil {
-		fmt.Printf("%s ERROR! Failed to create/update feed: %s", outputText, err)
+		log.Error("Syncing %s (%d) failed! Unable to create/update feed: %s", feed.Title, feed.ID, err)
 		return
 	}
 
@@ -37,7 +37,7 @@ func syncFeed(wg *sync.WaitGroup, db *gorm.DB, feedID uint) {
 		item.Feed = *feed
 		_, created, err := models.CreateOrUpdateFeedItem(db, item)
 		if err != nil {
-			fmt.Printf("%s ERROR! Failed to create/update feed item: %s", outputText, err)
+			log.Error("Syncing %s (%d) failed! Unable to create/update feed item: %s", feed.Title, feed.ID, err)
 			return
 		}
 
@@ -48,7 +48,7 @@ func syncFeed(wg *sync.WaitGroup, db *gorm.DB, feedID uint) {
 		}
 	}
 
-	outputText += " SUCCESS! "
+	outputText := fmt.Sprintf("Successfully synced %s (%d): ", feed.Title, feed.ID)
 
 	if createdCount != 0 {
 		outputText += fmt.Sprintf("%d items created", createdCount)
@@ -60,7 +60,7 @@ func syncFeed(wg *sync.WaitGroup, db *gorm.DB, feedID uint) {
 		outputText += fmt.Sprintf("%d items updated", updatedCount)
 	}
 
-	fmt.Println(outputText)
+	log.Success(outputText)
 }
 
 // Run the sync command
@@ -75,7 +75,7 @@ func runSyncCommand(cmd *cobra.Command, args []string) error {
 		return err
 	}
 
-	fmt.Printf("Fetching feeds... ")
+	log.Debug("Fetching feeds... ")
 	feeds := []models.Feed{}
 	result := db.Find(&feeds)
 	if result.Error != nil {
@@ -84,7 +84,7 @@ func runSyncCommand(cmd *cobra.Command, args []string) error {
 
 	var wg sync.WaitGroup
 
-	fmt.Printf("%d found\n", len(feeds))
+	log.Info("Syncing %d feeds...", len(feeds))
 	for _, feed := range feeds {
 		wg.Add(1)
 		go syncFeed(&wg, db, feed.ID)
