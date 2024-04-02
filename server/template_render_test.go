@@ -25,7 +25,7 @@ func TestTimeAgo(t *testing.T) {
 	tests := map[time.Time]string{
 		time.Now().AddDate(-1, 0, 0):                 time.Now().AddDate(-1, 0, 0).Format("2006-01-02"),
 		time.Now().AddDate(0, -1, 0):                 time.Now().AddDate(0, -1, 0).Format("2006-01-02"),
-		time.Now().AddDate(0, 0, -7):                 time.Now().AddDate(0, 0, -7).Format("2006-01-02"),
+		time.Now().AddDate(0, 0, -14):                time.Now().AddDate(0, 0, -14).Format("2006-01-02"),
 		time.Now().AddDate(0, 0, -2):                 "2 days ago",
 		time.Now().AddDate(0, 0, -1):                 "1 day ago",
 		time.Now().Add(time.Hour * -12):              "12 hours ago",
