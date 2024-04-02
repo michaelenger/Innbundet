@@ -8,14 +8,14 @@ import (
 
 // A feed that is being subscribed to
 type Feed struct {
-	ID          uint `gorm:"primaryKey"`
-	Url         string
-	Title       string
-	Link        string
-	Description string
-	Image       *string
-	CreatedAt   time.Time
-	UpdatedAt   time.Time
+	ID          uint      `gorm:"primaryKey" json:"-"`
+	Url         string    `json:"url"`
+	Title       string    `json:"title"`
+	Link        string    `json:"link"`
+	Description string    `json:"description"`
+	Image       *string   `json:"image"`
+	CreatedAt   time.Time `json:"-"`
+	UpdatedAt   time.Time `json:"-"`
 }
 
 // Create a new feed or update if the feed already exists

@@ -99,6 +99,15 @@ You can remove a feed using the `remove` subcommand and the feed's ID:
 innbundet remove 123
 ```
 
+### Exporting Feeds
+
+The `export` command will list all feeds as JSON which can be piped to a file
+if need be:
+
+```shell
+innbundet export > feeds.json
+```
+
 ## TODO
 
 Things that may be fun to add:
