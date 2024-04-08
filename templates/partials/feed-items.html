@@ -3,8 +3,20 @@
 
 	<li class="feed-item">
 		{{template "partials/feed-icon.html" .Feed}}
-		<div>
-			<h3 class="feed-title"><a href="{{.Link}}">{{.Title}}</a></h3>
+		<div class="feed-item-compact">
+			<small class="feed-meta">
+				<span>{{.Feed.Title}}</span>
+				<time datetime="{{.Published}}">{{timeago .Published}}</time>
+			</small>
+			<a class="feed-item-link" href="{{.Link}}">
+				<span>{{.Title}}</span>
+				{{if .Image}}
+					<img src="{{.Image}}" alt="">
+				{{end}}
+			</a>
+		</div>
+		<div class="feed-item-extended">
+			<h3 class="feed-title"><a class="feed-item-link" href="{{.Link}}">{{.Title}}</a></h3>
 			<small class="feed-meta">
 				<time datetime="{{.Published}}">{{timeago .Published}}</time>
 				{{if .Author}}
