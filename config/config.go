@@ -28,7 +28,7 @@ func FromFile(filePath string) (*Config, error) {
 
 	log.Debug("Reading config file at: %s", filePath)
 	if _, err := os.Stat(filePath); os.IsNotExist(err) {
-		log.Warning("Unable to find config file; using default values", filePath)
+		log.Warning("Unable to find config file; using default values")
 		return &conf, nil
 	}
 
