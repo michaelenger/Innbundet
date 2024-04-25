@@ -1,7 +1,9 @@
 {{template "partials/header.html" .}}
 
 <div id="feed-header">
-	{{template "partials/feed-icon.html" .Feed}}
+	{{if .Image}}
+		{{template "partials/feed-icon.html" .Feed}}
+	{{end}}
 	<div class="feed-info">
 		<h2>{{.Feed.Title}}</h2>
 		<small class="feed-meta"><a href="{{urlbase .Feed.Link}}">{{urlhost .Feed.Link}}</a></small>
