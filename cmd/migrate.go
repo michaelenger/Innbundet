@@ -67,7 +67,7 @@ var migrateCommand = &cobra.Command{
 
 // Initialise the migrate command
 func init() {
-	migrateCommand.Flags().BoolVarP(&includeExampleData, "include-example-data", "d", false, "Include example data")
+	migrateCommand.Flags().BoolVarP(&includeExampleData, "include-example-data", "e", false, "Include example data")
 
 	rootCmd.AddCommand(migrateCommand)
 }
