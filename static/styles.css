@@ -12,7 +12,7 @@
 	--spacing: 12px;
 	--spacing-small: 6px;
 	--icon-width-compact: 22px;
-	--icon-width-extended: 32px;
+	--icon-width: 32px;
 }
 
 /* Elements */
@@ -135,10 +135,9 @@ p {
 /* Classes */
 
 .feed-icon {
-	flex: 0 0 var(--icon-width-compact);
-	margin-right: var(--spacing-small);
+	flex: 0 0 var(--icon-width);
+	margin-right: var(--spacing);
 	position: relative;
-	top: 14px;
 }
 
 .feed-icon .letter-icon {
@@ -147,11 +146,11 @@ p {
 	color: var(--color-background);
 	display: block;
 	font-size: 13pt;
-  	font-weight: bold;
-  	height: var(--icon-width-compact);
-  	line-height: var(--icon-width-compact);
-  	text-align: center;
-	width: var(--icon-width-compact);
+	font-weight: bold;
+	height: var(--icon-width);
+	line-height: var(--icon-width);
+	text-align: center;
+	width: var(--icon-width);
 }
 
 .feed-image {
@@ -169,6 +168,18 @@ p {
 
 .feed-item img {
 	display: block;
+}
+
+.feed-item .feed-icon {
+	flex: 0 0 var(--icon-width-compact);
+	margin-right: var(--spacing-small);
+	top: 14px;
+}
+
+.feed-item .feed-icon .letter-icon {
+	height: var(--icon-width-compact);
+	line-height: var(--icon-width-compact);
+	width: var(--icon-width-compact);
 }
 
 .feed-item-compact {
@@ -327,24 +338,16 @@ p {
 		flex: 1;
 	}
 
-	.feed-content {
-		display: flex;
-	}
-
-	.feed-description {
-		order: 2;
-	}
-
-	.feed-icon {
-		flex: 0 0 var(--icon-width-extended);
+	.feed-item .feed-icon {
+		flex: 0 0 var(--icon-width);
 		margin-right: var(--spacing);
 		top: 0;
 	}
 
-	.feed-icon .letter-icon {
-		height: var(--icon-width-extended);
-		line-height: var(--icon-width-extended);
-		width: var(--icon-width-extended);
+	.feed-item .feed-icon .letter-icon {
+		height: var(--icon-width);
+		line-height: var(--icon-width);
+		width: var(--icon-width);
 	}
 
 	.feed-image {
@@ -360,6 +363,14 @@ p {
 
 	.feed-item-extended {
 		display: block;
+	}
+
+	.feed-item-extended .feed-content {
+		display: flex;
+	}
+
+	.feed-item-extended .feed-description {
+		order: 2;
 	}
 
 	.feed-item-link {
@@ -449,7 +460,7 @@ p {
 	#menu .feed-icon {
 		display: inline-block;
 		height: 1em;
-		margin-right: 0.5em;
+		margin-right: 0.25em;
 		position: relative;
 		top: 0.1em;
 		width: 1em;
